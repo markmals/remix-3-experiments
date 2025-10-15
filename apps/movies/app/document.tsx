@@ -1,7 +1,7 @@
 import type { Remix } from "@remix-run/dom";
 import entryBrowserUrl from "~/assets/entry.browser.tsx?url";
 import styles from "~/styles/index.css?url";
-import { prop } from "./utils/css-prop.ts";
+import { cssvar as $ } from "./utils/css-var.ts";
 
 export function Document({
 	title,
@@ -33,10 +33,10 @@ export function Document({
 			<body
 				css={{
 					minHeight: "100vh",
-					fontFamily: `"Space Grotesk", ${prop("default-font-family")}`,
-					background: `radial-gradient(140% 140% at 80% -20%, rgba(51, 241, 255, 0.2) 0%, rgba(51, 241, 255, 0) 55%), radial-gradient(120% 120% at 0% 0%, rgba(255, 73, 210, 0.18) 0%, rgba(255, 73, 210, 0) 60%), ${prop("jam-bg")}`,
+					fontFamily: `"Space Grotesk", ${$("default-font-family")}`,
+					background: `radial-gradient(140% 140% at 80% -20%, rgba(51, 241, 255, 0.2) 0%, rgba(51, 241, 255, 0) 55%), radial-gradient(120% 120% at 0% 0%, rgba(255, 73, 210, 0.18) 0%, rgba(255, 73, 210, 0) 60%), ${$("jam-bg")}`,
 					backgroundAttachment: "fixed",
-					color: prop("jam-text-primary"),
+					color: $("jam-text-primary"),
 					transition: "background 600ms ease, color 600ms ease",
 				}}
 			>

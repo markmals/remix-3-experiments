@@ -41,6 +41,6 @@ depends = ["fmt", "lint"]
 
 [tasks.typecheck]
 description = "Typecheck the entire project"
-sources = ["app/**/*.{ts,tsx}"]
-# depends = "generate-*"
+# sources = ["app/**/*.{ts,tsx}"]
+depends = "generate-*"
 run = "tsgo --noEmit"

@@ -1,5 +1,5 @@
 import { routes } from "~/routes.ts";
-import { prop } from "~/utils/css-prop.ts";
+import { cssvar as $ } from "~/utils/css-var.ts";
 
 const FALLBACK_POSTER =
 	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='48%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='400' height='600' fill='url(%23g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23f4f5ff' font-family='sans-serif' font-size='42' letter-spacing='8'>RMX</text></svg>";
@@ -28,7 +28,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 			? releaseDate.toLocaleDateString("en-US", {
 					month: "short",
 					year: "numeric",
-			  })
+				})
 			: releaseDate;
 	const releaseYear =
 		releaseDate instanceof Date && !Number.isNaN(releaseDate.getTime())
@@ -42,32 +42,33 @@ export function MovieCard({ movie }: MovieCardProps) {
 		if (releaseYear >= currentYear - 5) return "Recent Favorite";
 		return "Cult Classic";
 	})();
-const statusColor =
-	status === "New Release"
-		? prop("jam-glow-magenta")
-		: status === "Fresh Pick"
-			? prop("jam-glow-cyan")
-			: prop("jam-text-primary");
+	const statusColor =
+		status === "New Release"
+			? $("jam-glow-magenta")
+			: status === "Fresh Pick"
+				? $("jam-glow-cyan")
+				: $("jam-text-primary");
 
 	return (
 		<article
 			css={{
 				position: "relative",
 				display: "grid",
-				gap: prop("spacing-4"),
-				padding: prop("spacing-4"),
+				gap: $("spacing-4"),
+				padding: $("spacing-4"),
 				borderRadius: "1.5rem",
-				background: prop("jam-surface"),
-				border: `1px solid ${prop("jam-border")}`,
-				boxShadow: prop("jam-shadow-pop"),
+				background: $("jam-surface"),
+				border: `1px solid ${$("jam-border")}`,
+				boxShadow: $("jam-shadow-pop"),
 				overflow: "hidden",
-				transition: "transform 280ms ease, box-shadow 280ms ease, border 280ms ease",
+				transition:
+					"transform 280ms ease, box-shadow 280ms ease, border 280ms ease",
 				"&::before": {
 					content: '""',
 					position: "absolute",
 					inset: "1px",
 					borderRadius: "calc(1.5rem - 1px)",
-					background: prop("jam-gradient-soft"),
+					background: $("jam-gradient-soft"),
 					opacity: 0,
 					transition: "opacity 300ms ease",
 					zIndex: 0,
@@ -83,13 +84,13 @@ const statusColor =
 			}}
 		>
 			<a
-			css={{
-				position: "relative",
-				display: "block",
-				borderRadius: "1.2rem",
-				overflow: "hidden",
-				background: prop("jam-surface-alt"),
-				border: "1px solid rgba(255, 255, 255, 0.08)",
+				css={{
+					position: "relative",
+					display: "block",
+					borderRadius: "1.2rem",
+					overflow: "hidden",
+					background: $("jam-surface-alt"),
+					border: "1px solid rgba(255, 255, 255, 0.08)",
 					aspectRatio: "2 / 3",
 					zIndex: 1,
 					"&:hover img": {
@@ -132,29 +133,31 @@ const statusColor =
 					<div
 						css={{
 							position: "absolute",
-							top: prop("spacing-3"),
-							left: prop("spacing-3"),
+							top: $("spacing-3"),
+							left: $("spacing-3"),
 							display: "flex",
 							alignItems: "center",
 							gap: "0.35rem",
 							padding: "0.35rem 0.6rem",
 							borderRadius: "999px",
-					background: "rgba(8, 10, 28, 0.8)",
-					border: "1px solid rgba(255, 255, 255, 0.1)",
-					color: prop("jam-text-primary"),
+							background: "rgba(8, 10, 28, 0.8)",
+							border: "1px solid rgba(255, 255, 255, 0.1)",
+							color: $("jam-text-primary"),
 							fontSize: "0.75rem",
 							letterSpacing: "0.18em",
 							textTransform: "uppercase",
 							boxShadow: "0 12px 24px rgba(5, 7, 24, 0.45)",
 						}}
 					>
+						{/* TODO: Turn this into a ★ instead of a circle; use this unicode character: ★ */}
+						{/* Keep the same glow and color, though. */}
 						<span
 							css={{
 								display: "inline-flex",
 								width: "8px",
 								height: "8px",
 								borderRadius: "50%",
-						background: prop("jam-glow-cyan"),
+								background: $("jam-glow-cyan"),
 								boxShadow: "0 0 10px rgba(51, 241, 255, 0.75)",
 							}}
 						/>
@@ -178,36 +181,36 @@ const statusColor =
 				}}
 			>
 				<a
-					href={routes.movies.show.href({ id: movie.id.toString() })}
 					css={{
 						display: "inline-flex",
 						alignItems: "center",
 						gap: "0.6rem",
 						fontSize: "1.05rem",
-				fontWeight: 600,
-				textTransform: "uppercase",
-				color: prop("jam-text-primary"),
-				letterSpacing: "0.12em",
-				textDecoration: "none",
-				transition: "color 200ms ease",
-				"&:hover": {
-					color: prop("jam-glow-cyan"),
-				},
+						fontWeight: 600,
+						textTransform: "uppercase",
+						color: $("jam-text-primary"),
+						letterSpacing: "0.12em",
+						textDecoration: "none",
+						transition: "color 200ms ease",
+						"&:hover": {
+							color: $("jam-glow-cyan"),
+						},
 					}}
+					href={routes.movies.show.href({ id: movie.id.toString() })}
 				>
 					<span>{movie.title}</span>
 				</a>
 				<div
-			css={{
+					css={{
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "space-between",
 						padding: "0.55rem 0.7rem",
 						borderRadius: "0.95rem",
-				border: "1px solid rgba(255, 255, 255, 0.08)",
-				background: "rgba(13, 16, 33, 0.7)",
-				backdropFilter: "blur(18px)",
-				color: prop("jam-text-muted"),
+						border: "1px solid rgba(255, 255, 255, 0.08)",
+						background: "rgba(13, 16, 33, 0.7)",
+						backdropFilter: "blur(18px)",
+						color: $("jam-text-muted"),
 						fontSize: "0.78rem",
 						letterSpacing: "0.18em",
 					}}
@@ -220,24 +223,7 @@ const statusColor =
 						}}
 					>
 						<span css={{ fontSize: "0.65rem", opacity: 0.7 }}>Release</span>
-					<span css={{ color: prop("jam-text-primary") }}>
-							{releaseLabel}
-						</span>
-					</div>
-					<div
-						css={{
-							display: "inline-flex",
-							alignItems: "center",
-							justifyContent: "center",
-							padding: "0.35rem 0.8rem",
-							borderRadius: "999px",
- 					background: "rgba(35, 189, 255, 0.12)",
-					color: prop("jam-glow-cyan"),
-							fontSize: "0.75rem",
-							letterSpacing: "0.24em",
-						}}
-					>
-						{typeof rating === "number" ? `${rating.toFixed(1)} ★` : "NR"}
+						<span css={{ color: $("jam-text-primary") }}>{releaseLabel}</span>
 					</div>
 					<div
 						css={{

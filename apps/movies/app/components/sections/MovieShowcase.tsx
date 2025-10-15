@@ -1,6 +1,6 @@
 import type { MovieCardProps } from "~/components/MovieCard.tsx";
 import { MovieCard } from "~/components/MovieCard.tsx";
-import { prop } from "~/utils/css-prop.ts";
+import { cssvar as $ } from "~/utils/css-var.ts";
 
 type MovieShowcaseProps = {
 	title: string;
@@ -12,19 +12,19 @@ const sectionStyle = {
 	position: "relative" as const,
 	minWidth: "min(1160px, 94vw)",
 	margin: "auto",
-	padding: `0 ${prop("spacing-4")}`,
+	padding: `${$("spacing-16")} ${$("spacing-4")} ${$("spacing-10")}`,
 	display: "grid",
-	gap: prop("spacing-6"),
+	gap: $("spacing-6"),
 };
 
 const headerStyle = {
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "space-between",
-	gap: prop("spacing-4"),
+	gap: $("spacing-4"),
 	textTransform: "uppercase" as const,
 	letterSpacing: "0.26em",
-	color: prop("jam-text-muted"),
+	color: $("jam-text-muted"),
 };
 
 const flourishStyle = {
@@ -32,7 +32,7 @@ const flourishStyle = {
 	alignItems: "center",
 	gap: "0.5rem",
 	fontSize: "0.75rem",
-	color: prop("jam-text-primary"),
+	color: $("jam-text-primary"),
 };
 
 const flourishBarStyle = {
@@ -40,12 +40,12 @@ const flourishBarStyle = {
 	width: "60px",
 	height: "2px",
 	borderRadius: "999px",
-	background: prop("jam-gradient-primary"),
+	background: $("jam-gradient-primary"),
 };
 
 const gridStyle = {
 	display: "grid",
-	gap: prop("spacing-6"),
+	gap: $("spacing-6"),
 	gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
 };
 

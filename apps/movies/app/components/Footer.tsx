@@ -1,12 +1,12 @@
-import { prop } from "~/utils/css-prop.ts";
+import { cssvar as $ } from "~/utils/css-var.ts";
 
 export function Footer() {
 	return (
 		<footer
 			css={{
 				position: "relative",
-				marginTop: prop("spacing-16"),
-				borderTop: `1px solid ${prop("jam-border")}`,
+				marginTop: $("spacing-16"),
+				borderTop: `1px solid ${$("jam-border")}`,
 				background: "rgba(8, 10, 24, 0.88)",
 				boxShadow: "0 -18px 40px rgba(4, 6, 20, 0.45)",
 			}}
@@ -19,19 +19,19 @@ export function Footer() {
 					left: 0,
 					width: "100%",
 					height: "2px",
-					background: prop("jam-gradient-primary"),
+					background: $("jam-gradient-primary"),
 				}}
 			/>
 			<div
 				css={{
 					maxWidth: "min(1160px, 94vw)",
 					margin: "0 auto",
-					padding: `${prop("spacing-6")} ${prop("spacing-4")}`,
+					padding: `${$("spacing-6")} ${$("spacing-4")}`,
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "space-between",
-					gap: prop("spacing-4"),
-					color: prop("jam-text-muted"),
+					gap: $("spacing-4"),
+					color: $("jam-text-muted"),
 					fontSize: "0.85rem",
 					"@media (max-width: 720px)": {
 						flexDirection: "column",
@@ -42,7 +42,7 @@ export function Footer() {
 				<div>
 					<span
 						css={{
-							color: prop("jam-text-primary"),
+							color: $("jam-text-primary"),
 							fontWeight: 600,
 							textTransform: "uppercase",
 						}}
@@ -68,7 +68,7 @@ export function Footer() {
 					Made By
 					<a
 						css={{
-							color: prop("jam-text-primary"),
+							color: $("jam-text-primary"),
 							textDecoration: "none",
 							position: "relative",
 							fontSize: "0.8rem",
@@ -80,7 +80,7 @@ export function Footer() {
 								bottom: "-0.35rem",
 								width: "100%",
 								height: "2px",
-								background: prop("jam-gradient-primary"),
+								background: $("jam-gradient-primary"),
 								opacity: 0,
 								transition: "opacity 200ms ease",
 							},
@@ -100,12 +100,12 @@ export function Footer() {
 					<a
 						css={{
 							textDecoration: "none",
-							color: prop("jam-text-muted"),
+							color: $("jam-text-muted"),
 							letterSpacing: "0.14em",
 							fontSize: "0.8rem",
 							transition: "color 200ms ease",
 							"&:hover": {
-								color: prop("jam-text-primary"),
+								color: $("jam-text-primary"),
 							},
 						}}
 						href="https://www.themoviedb.org/documentation/api"

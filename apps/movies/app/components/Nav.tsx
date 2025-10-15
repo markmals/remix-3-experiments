@@ -1,5 +1,5 @@
 import { routes } from "~/routes.ts";
-import { prop } from "~/utils/css-prop.ts";
+import { cssvar as $ } from "~/utils/css-var.ts";
 import { Logo } from "./Logo.tsx";
 
 const links = [
@@ -18,7 +18,7 @@ export function Nav() {
 				zIndex: 50,
 				backdropFilter: "blur(18px)",
 				background: "rgba(5, 6, 18, 0.85)",
-				borderBottom: `1px solid ${prop("jam-border")}`,
+				borderBottom: `1px solid ${$("jam-border")}`,
 				boxShadow: "0 18px 38px rgba(4, 6, 20, 0.55)",
 			}}
 		>
@@ -26,11 +26,11 @@ export function Nav() {
 				css={{
 					maxWidth: "min(1160px, 94vw)",
 					margin: "0 auto",
-					padding: `${prop("spacing-4")} ${prop("spacing-4")}`,
+					padding: `${$("spacing-4")} ${$("spacing-4")}`,
 					display: "grid",
 					gridTemplateColumns: "1fr auto",
 					alignItems: "center",
-					gap: prop("spacing-4"),
+					gap: $("spacing-4"),
 					"@media (max-width: 720px)": {
 						gridTemplateColumns: "1fr",
 						justifyItems: "stretch",
@@ -41,9 +41,9 @@ export function Nav() {
 					css={{
 						display: "inline-flex",
 						alignItems: "center",
-						gap: prop("spacing-3"),
+						gap: $("spacing-3"),
 						textDecoration: "none",
-						color: prop("jam-text-primary"),
+						color: $("jam-text-primary"),
 					}}
 					href={routes.index.href()}
 				>
@@ -80,7 +80,7 @@ export function Nav() {
 					css={{
 						display: "flex",
 						alignItems: "center",
-						gap: prop("spacing-3"),
+						gap: $("spacing-3"),
 						justifyContent: "flex-end",
 						"@media (max-width: 720px)": {
 							justifyContent: "space-between",
@@ -91,11 +91,11 @@ export function Nav() {
 						css={{
 							display: "flex",
 							alignItems: "center",
-							gap: prop("spacing-3"),
+							gap: $("spacing-3"),
 							padding: "0.35rem 0.5rem",
 							borderRadius: "999px",
 							background: "rgba(13, 16, 33, 0.65)",
-							border: `1px solid ${prop("jam-border")}`,
+							border: `1px solid ${$("jam-border")}`,
 							boxShadow: "0 10px 30px rgba(4, 6, 18, 0.45)",
 						}}
 					>
@@ -111,11 +111,11 @@ export function Nav() {
 										fontSize: "0.8rem",
 										letterSpacing: "0.14em",
 										textTransform: "uppercase",
-										color: prop("jam-text-muted"),
+										color: $("jam-text-muted"),
 										textDecoration: "none",
 										transition: "color 200ms ease, background 200ms ease",
 										"&:hover": {
-											color: prop("jam-text-primary"),
+											color: $("jam-text-primary"),
 											background: "rgba(27, 32, 60, 0.9)",
 										},
 									}}
@@ -133,13 +133,13 @@ export function Nav() {
 							gap: "0.65rem",
 							padding: "0.35rem 1.25rem",
 							borderRadius: "999px",
-							border: `1px solid ${prop("jam-border")}`,
-							background: prop("jam-surface-alt"),
+							border: `1px solid ${$("jam-border")}`,
+							background: $("jam-surface-alt"),
 							boxShadow: "0 12px 30px rgba(4, 6, 18, 0.45)",
 							textTransform: "uppercase",
 							fontSize: "0.7rem",
 							letterSpacing: "0.3em",
-							color: prop("jam-text-muted"),
+							color: $("jam-text-muted"),
 						}}
 						href="https://github.com/remix-run/remix"
 						rel="noopener"
@@ -151,7 +151,7 @@ export function Nav() {
 								width: "6px",
 								height: "34px",
 								borderRadius: "999px",
-								background: prop("jam-gradient-primary"),
+								background: $("jam-gradient-primary"),
 							}}
 						/>
 						Remix 3 Preview
