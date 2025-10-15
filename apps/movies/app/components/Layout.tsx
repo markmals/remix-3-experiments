@@ -11,22 +11,32 @@ export function Layout({ children }: { children: Remix.RemixNode }) {
 				flexDirection: "column",
 				position: "relative",
 				isolation: "isolate",
-				overflow: "hidden",
+				overflowX: "clip",
+				overflowY: "visible",
 			}}
 		>
 			<div
 				aria-hidden="true"
 				css={{
 					position: "absolute",
-					inset: "-25% -30%",
-					background:
-						"radial-gradient(50% 50% at 20% 20%, rgba(51, 241, 255, 0.12) 0%, rgba(51, 241, 255, 0) 65%), radial-gradient(45% 45% at 80% 15%, rgba(255, 73, 210, 0.12) 0%, rgba(255, 73, 210, 0) 70%)",
-					filter: "blur(60px)",
-					opacity: 0.9,
+					inset: 0,
+					overflow: "hidden",
+					pointerEvents: "none",
 					zIndex: -1,
-					transform: "translate3d(0, 0, 0)",
 				}}
-			/>
+			>
+				<div
+					css={{
+						position: "absolute",
+						inset: "-25% -30%",
+						background:
+							"radial-gradient(50% 50% at 20% 20%, rgba(51, 241, 255, 0.12) 0%, rgba(51, 241, 255, 0) 65%), radial-gradient(45% 45% at 80% 15%, rgba(255, 73, 210, 0.12) 0%, rgba(255, 73, 210, 0) 70%)",
+						filter: "blur(60px)",
+						opacity: 0.9,
+						transform: "translate3d(0, 0, 0)",
+					}}
+				/>
+			</div>
 			<Nav />
 			<main
 				css={{

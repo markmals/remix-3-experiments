@@ -30,16 +30,19 @@ export function MovieCard({ movie }: MovieCardProps) {
 					year: "numeric",
 				})
 			: releaseDate;
-	const releaseYear =
-		releaseDate instanceof Date && !Number.isNaN(releaseDate.getTime())
-			? releaseDate.getFullYear()
-			: undefined;
-	const currentYear = new Date().getFullYear();
 	const status = (() => {
-		if (!releaseYear) return "Unscheduled";
-		if (releaseYear >= currentYear) return "New Release";
-		if (releaseYear >= currentYear - 1) return "Fresh Pick";
-		if (releaseYear >= currentYear - 5) return "Recent Favorite";
+		if (!(releaseDate instanceof Date) || Number.isNaN(releaseDate.getTime()))
+			return "Unscheduled";
+		const now = new Date();
+		let monthsSinceRelease =
+			(now.getFullYear() - releaseDate.getFullYear()) * 12 +
+			(now.getMonth() - releaseDate.getMonth());
+		if (now.getDate() < releaseDate.getDate()) {
+			monthsSinceRelease -= 1;
+		}
+		if (monthsSinceRelease < 3) return "New Release";
+		if (monthsSinceRelease < 6) return "Fresh Pick";
+		if (monthsSinceRelease < 36) return "Recent Favorite";
 		return "Cult Classic";
 	})();
 	const statusColor =
@@ -81,6 +84,12 @@ export function MovieCard({ movie }: MovieCardProps) {
 				"&:hover::before": {
 					opacity: 1,
 				},
+				"&:hover .movie-poster": {
+					transform: "scale(1.05)",
+				},
+				"&:hover .poster-overlay": {
+					opacity: 1,
+				},
 			}}
 		>
 			<a
@@ -93,12 +102,6 @@ export function MovieCard({ movie }: MovieCardProps) {
 					border: "1px solid rgba(255, 255, 255, 0.08)",
 					aspectRatio: "2 / 3",
 					zIndex: 1,
-					"&:hover img": {
-						transform: "scale(1.05)",
-					},
-					"&:hover .poster-overlay": {
-						opacity: 1,
-					},
 				}}
 				href={routes.movies.show.href({ id: movie.id.toString() })}
 			>
@@ -197,10 +200,8 @@ export function MovieCard({ movie }: MovieCardProps) {
 						lineHeight: 1.35,
 						minHeight: "3.2rem",
 						transition: "color 200ms ease",
-						"&:hover": {
-							color: $("jam-glow-cyan"),
-						},
 					}}
+					class="movie-card-title"
 					href={routes.movies.show.href({ id: movie.id.toString() })}
 				>
 					<span>{movie.title}</span>

@@ -7,8 +7,8 @@ import { tmdb } from "~/lib/services/tmdb/client.ts";
 import type { routes } from "~/routes.ts";
 import { render } from "~/utils/render.tsx";
 
-export const homeHandler: InferRouteHandler<typeof routes.index> = async () => {
-	const popularMoviesData = await tmdb.getPopularMovies();
+const homeHandler: InferRouteHandler<typeof routes.index> = async () => {
+	const popularMoviesData = await tmdb.getTrendingMovies();
 	const popularMovies = popularMoviesData?.results ?? [];
 
 	return render(

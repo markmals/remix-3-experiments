@@ -1,6 +1,7 @@
 import { routes } from "~/routes.ts";
 import { cssvar as $ } from "~/utils/css-var.ts";
-import { Logo } from "./Logo.tsx";
+
+const BRAND_HEIGHT = "38px";
 
 const links = [
 	{ label: "Movies", href: routes.index.href() },
@@ -52,27 +53,43 @@ export function Nav() {
 							display: "inline-flex",
 							alignItems: "center",
 							justifyContent: "center",
-							width: "136px",
+							height: BRAND_HEIGHT,
 						}}
 					>
-						<Logo />
+						<img
+							alt="Remix logo"
+							css={{
+								display: "block",
+								height: "100%",
+								width: "auto",
+								transform: "translateY(2px)",
+							}}
+							height="269"
+							src="/remix-logo.svg"
+							width="819"
+						/>
 					</span>
 					<span
 						css={{
-							display: "grid",
-							gap: "0.25rem",
+							display: "inline-flex",
+							alignItems: "end",
+							height: BRAND_HEIGHT,
 							textTransform: "uppercase",
 							letterSpacing: "0.16em",
 						}}
 					>
 						<span
 							css={{
-								fontSize: "1.05rem",
+								display: "inline-flex",
+								alignItems: "center",
+								fontSize: "1.72rem",
 								fontWeight: 600,
 								letterSpacing: "0.14em",
+								lineHeight: 1,
+								paddingTop: "2px",
 							}}
 						>
-							Remix Movies
+							Movies
 						</span>
 					</span>
 				</a>
