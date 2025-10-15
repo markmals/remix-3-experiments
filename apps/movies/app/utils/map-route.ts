@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: Needed for type coercion */
 import type { InferRouteHandler, Route, Router } from "@remix-run/fetch-router";
 
 type RouteLike = Route | string;
@@ -26,14 +27,23 @@ function invokeHandler<T extends RouteLike>(
 	return handler.handler(context);
 }
 
-export function lazyMap<T extends RouteLike>(
+export async function lazyMap<T extends RouteLike>(
 	router: Router,
 	route: T,
 	load: () => LoadedModule<T>,
 ) {
-	router.map(route, async (context) => {
+	if (import.meta.dev) {
+		router.map(route, async (context) => {
+			const mod = await load();
+			const handler = (mod.default ?? mod.handler) as HandlerReturn<T>;
+			return invokeHandler(handler, context);
+		});
+	} else {
 		const mod = await load();
 		const handler = (mod.default ?? mod.handler) as HandlerReturn<T>;
-		return invokeHandler(handler, context);
-	});
+
+		router.map(route, async (context) => {
+			return invokeHandler(handler, context);
+		});
+	}
 }
