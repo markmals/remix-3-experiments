@@ -1,0 +1,31 @@
+{
+	"name": "remix-movies",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@remix-run/dom": "catalog:remix",
+		"@remix-run/events": "catalog:remix",
+		"@remix-run/fetch-router": "catalog:remix",
+		"@remix-run/file-storage": "catalog:remix",
+		"@remix-run/headers": "catalog:remix",
+		"@remix-run/lazy-file": "catalog:remix",
+		"@remix-run/node-fetch-server": "catalog:remix",
+		"@std/path": "catalog:",
+		"openapi-fetch": "^0.15.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.6",
+		"@remix-run/style": "0.0.0-experimental-remix-jam.1",
+		"@types/node": "catalog:dev",
+		"@typescript/native-preview": "7.0.0-dev.20251014.1",
+		"apib2swagger": "^1.17.1",
+		"nitro": "catalog:dev",
+		"openapi-typescript": "^7.10.0",
+		"vite": "catalog:dev"
+	}
+}

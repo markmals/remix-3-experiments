@@ -1,0 +1,28 @@
+packages:
+    - "apps/*"
+    - "packages/*"
+
+catalog:
+    "@std/path": jsr:^1.1.2
+
+catalogs:
+    remix:
+        "@remix-run/dom": jam
+        "@remix-run/events": jam
+        "@remix-run/fetch-router": latest
+        "@remix-run/file-storage": latest
+        "@remix-run/headers": latest
+        "@remix-run/lazy-file": latest
+        "@remix-run/node-fetch-server": latest
+    dev:
+        "@types/node": ^24.6.0
+        vite: npm:rolldown-vite@latest
+        nitro: latest
+
+overrides:
+    vite: npm:rolldown-vite@latest
+
+onlyBuiltDependencies:
+    - esbuild
+    - sharp
+    - unrs-resolver

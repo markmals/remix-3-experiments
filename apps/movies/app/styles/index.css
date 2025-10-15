@@ -1,0 +1,16 @@
+/* @layer reset, defaults, patterns, components, utilities, overrides; */
+@layer theme, base, components, utilities;
+
+@import url("./theme.css") layer(theme);
+@import url("./base.css") layer(base);
+@import url("./components.css") layer(components);
+@import url("./view-transitions.css") layer(components);
+@import url("./utilities.css") layer(utilities);
+
+button {
+	cursor: pointer;
+}
+
+button:disabled {
+	cursor: default;
+}

@@ -1,0 +1,42 @@
+.vstack {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: var(--gap, var(--spacing-2));
+}
+
+.hstack {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: var(--gap, var(--spacing-2));
+}
+
+.spacer {
+    flex: 1;
+}
+
+.hstack:has(> .spacer) {
+    justify-content: space-between;
+}
+
+.vstack:has(> .spacer) {
+    justify-content: space-between;
+}
+
+.vstack[data-alignment="leading"],
+.hstack[data-alignment="top"] {
+    align-items: start;
+}
+
+.vstack[data-alignment="center"],
+.hstack[data-alignment="center"] {
+    align-items: center;
+}
+
+.vstack[data-alignment="trailing"],
+.hstack[data-alignment="bottom"] {
+    align-items: end;
+}
