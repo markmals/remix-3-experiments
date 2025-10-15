@@ -1,2 +1,2 @@
 .output
-app/lib/services/**/api/*
+app/lib/services/**/api/types.ts
