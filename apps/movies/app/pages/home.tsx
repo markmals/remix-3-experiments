@@ -15,9 +15,9 @@ export const homeHandler: InferRouteHandler<typeof routes.index> = async () => {
 		<Document title="Remix Movies">
 			<Layout>
 				<MovieShowcase
-					label="Remix Jam Playlist"
+					label={new Date().toDateString()}
 					movies={popularMovies}
-					title="Spotlight Selection"
+					title="Trending Movies"
 				/>
 			</Layout>
 		</Document>,

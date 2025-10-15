@@ -149,18 +149,21 @@ export function MovieCard({ movie }: MovieCardProps) {
 							boxShadow: "0 12px 24px rgba(5, 7, 24, 0.45)",
 						}}
 					>
-						{/* TODO: Turn this into a ★ instead of a circle; use this unicode character: ★ */}
-						{/* Keep the same glow and color, though. */}
 						<span
 							css={{
 								display: "inline-flex",
-								width: "8px",
-								height: "8px",
-								borderRadius: "50%",
-								background: $("jam-glow-cyan"),
-								boxShadow: "0 0 10px rgba(51, 241, 255, 0.75)",
+								alignItems: "center",
+								justifyContent: "center",
+								width: "1rem",
+								height: "1rem",
+								color: $("jam-glow-cyan"),
+								fontSize: "0.85rem",
+								lineHeight: 1,
+								textShadow: "0 0 10px rgba(51, 241, 255, 0.75)",
 							}}
-						/>
+						>
+							★
+						</span>
 						{rating.toFixed(1)}
 					</div>
 				) : null}
@@ -183,7 +186,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 				<a
 					css={{
 						display: "inline-flex",
-						alignItems: "center",
+						alignItems: "flex-start",
 						gap: "0.6rem",
 						fontSize: "1.05rem",
 						fontWeight: 600,
@@ -191,6 +194,8 @@ export function MovieCard({ movie }: MovieCardProps) {
 						color: $("jam-text-primary"),
 						letterSpacing: "0.12em",
 						textDecoration: "none",
+						lineHeight: 1.35,
+						minHeight: "3.2rem",
 						transition: "color 200ms ease",
 						"&:hover": {
 							color: $("jam-glow-cyan"),
