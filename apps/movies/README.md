@@ -8,3 +8,6 @@ To start the development server:
 mise install
 mise run dev
 ```
+
+![home page](screenshots/home.png)
+![details page](screenshots/details.png)
