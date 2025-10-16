@@ -1,0 +1,5 @@
+export const FALLBACK_POSTER =
+	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='48%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='400' height='600' fill='url(%23g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23f4f5ff' font-family='sans-serif' font-size='42' letter-spacing='8'>RMX</text></svg>";
+
+export const FALLBACK_PROFILE =
+	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='p' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='70%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='200' height='200' rx='28' fill='url(%23p)'/><circle cx='100' cy='78' r='38' fill='rgba(255,255,255,0.18)'/><path d='M40 164c8-40 112-40 120 0' fill='rgba(255,255,255,0.12)'/></svg>";
