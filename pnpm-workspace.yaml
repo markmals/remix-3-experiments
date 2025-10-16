@@ -4,11 +4,13 @@ packages:
 
 catalog:
     "@std/path": jsr:^1.1.2
+    openapi-fetch: ^0.15.0
 
 catalogs:
     remix:
         "@remix-run/dom": jam
         "@remix-run/events": jam
+        "@remix-run/style": jam
         "@remix-run/fetch-router": latest
         "@remix-run/file-storage": latest
         "@remix-run/headers": latest
@@ -18,6 +20,10 @@ catalogs:
         "@types/node": ^24.6.0
         vite: npm:rolldown-vite@latest
         nitro: latest
+        openapi-typescript: ^7.10.0
+    tools:
+        "@biomejs/biome": ^2.2.6
+        "@typescript/native-preview": latest
 
 overrides:
     vite: npm:rolldown-vite@latest
