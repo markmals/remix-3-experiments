@@ -19,12 +19,12 @@ export function PosterCard({
 		<div
 			css={{
 				position: "relative",
-				borderRadius: "1.5rem",
+				borderRadius: $("radius-3xl"),
 				overflow: "hidden",
 				background: $("jam-surface"),
 				border: `1px solid ${$("jam-border")}`,
 				boxShadow: $("jam-shadow-pop"),
-				aspectRatio: "2 / 3",
+				aspectRatio: $("jam-aspect-poster"),
 			}}
 		>
 			<img
@@ -46,16 +46,16 @@ export function PosterCard({
 						left: $("spacing-4"),
 						display: "flex",
 						alignItems: "center",
-						gap: "0.5rem",
-						padding: "0.6rem 1rem",
-						borderRadius: "999px",
-						background: "rgba(8, 10, 28, 0.9)",
-						border: "1px solid rgba(255, 255, 255, 0.1)",
+					gap: $("spacing-2"),
+					padding: `${$("spacing-2")} ${$("spacing-4")}`,
+						borderRadius: $("radius-full"),
+						background: $("jam-overlay-surface-strong"),
+						border: `1px solid ${$("jam-border")}`,
 						color: $("jam-text-primary"),
-						fontSize: "1rem",
-						letterSpacing: "0.18em",
+						fontSize: $("font-size-base"),
+						letterSpacing: $("letter-spacing-ultra-wide"),
 						textTransform: "uppercase",
-						boxShadow: "0 12px 24px rgba(5, 7, 24, 0.45)",
+						boxShadow: $("jam-shadow-float"),
 					}}
 				>
 					<span
@@ -63,12 +63,12 @@ export function PosterCard({
 							display: "inline-flex",
 							alignItems: "center",
 							justifyContent: "center",
-							width: "1.2rem",
-							height: "1.2rem",
+							width: $("spacing-5"),
+							height: $("spacing-5"),
 							color: $("jam-glow-cyan"),
-							fontSize: "1rem",
+							fontSize: $("font-size-base"),
 							lineHeight: 1,
-							textShadow: "0 0 12px rgba(51, 241, 255, 0.8)",
+							textShadow: $("jam-text-shadow-glow"),
 						}}
 					>
 						★

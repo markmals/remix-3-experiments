@@ -33,13 +33,13 @@ export function MovieInfoPanel({
 			>
 				<h1
 					css={{
-						fontSize: "clamp(2rem, 5vw, 3.5rem)",
-						fontWeight: 700,
-						letterSpacing: "0.08em",
+						fontSize: $("font-size-display-lg"),
+						fontWeight: $("font-weight-bold"),
+						letterSpacing: $("letter-spacing-extra-wide"),
 						textTransform: "uppercase",
 						color: $("jam-text-primary"),
-						lineHeight: 1.1,
-						textShadow: "0 4px 20px rgba(51, 241, 255, 0.2)",
+						lineHeight: $("font-size-display-lg--line-height"),
+						textShadow: $("shadow-text-glow"),
 					}}
 				>
 					{title}
@@ -47,9 +47,9 @@ export function MovieInfoPanel({
 				{year ? (
 					<div
 						css={{
-							fontSize: "1.4rem",
-							fontWeight: 600,
-							letterSpacing: "0.2em",
+							fontSize: $("font-size-2xl"),
+							fontWeight: $("font-weight-semibold"),
+							letterSpacing: $("letter-spacing-widest"),
 							color: $("jam-text-muted"),
 						}}
 					>
@@ -61,15 +61,14 @@ export function MovieInfoPanel({
 				css={{
 					position: "relative",
 					padding: $("spacing-4"),
-					fontSize: "1.05rem",
-					lineHeight: 1.8,
+					fontSize: $("font-size-lg"),
+					lineHeight: $("line-height-relaxed"),
 					color: $("jam-text-muted"),
-					borderRadius: "1.2rem",
-					border: "1px solid rgba(255, 255, 255, 0.08)",
-					boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
-					background:
-						"linear-gradient(135deg, rgba(12, 16, 36, 0.55) 0%, rgba(26, 18, 46, 0.39) 45%, rgba(64, 22, 66, 0.28) 100%)",
-					backdropFilter: "blur(14px)",
+					borderRadius: $("radius-3xl"),
+					border: `1px solid ${$("jam-border")}`,
+					boxShadow: `${$("shadow-elevated-lg")}, ${$("shadow-inset-subtle")}`,
+					background: $("gradient-accent-soft"),
+					backdropFilter: `blur(${$("blur-lg")})`,
 				}}
 			>
 				{overview}
@@ -92,8 +91,8 @@ function KeyFactsGrid({ facts }: { facts: MovieKeyFact[] }) {
 		>
 			<h2
 				css={{
-					fontSize: "0.82rem",
-					letterSpacing: "0.32em",
+					fontSize: $("font-size-sm"),
+					letterSpacing: $("letter-spacing-super-wide"),
 					textTransform: "uppercase",
 					color: $("jam-text-secondary"),
 				}}
@@ -103,7 +102,7 @@ function KeyFactsGrid({ facts }: { facts: MovieKeyFact[] }) {
 			<dl
 				css={{
 					display: "grid",
-					gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+					gridTemplateColumns: `repeat(auto-fit, minmax(${$("spacing-44")}, 1fr))`,
 					gap: $("spacing-4"),
 				}}
 			>
@@ -111,20 +110,19 @@ function KeyFactsGrid({ facts }: { facts: MovieKeyFact[] }) {
 					<div
 						css={{
 							display: "grid",
-							gap: "0.4rem",
-							padding: "0.95rem",
-							borderRadius: "1rem",
+							gap: $("spacing-2"),
+							padding: $("spacing-4"),
+							borderRadius: $("radius-2xl"),
 							background: $("jam-surface"),
 							border: `1px solid ${$("jam-border")}`,
-							boxShadow:
-								"0 14px 30px rgba(4, 5, 18, 0.45), inset 0 1px 0 rgba(255,255,255,0.04)",
+							boxShadow: `${$("shadow-elevated-lg")}, ${$("shadow-inset-subtle")}`,
 						}}
 						key={fact.label}
 					>
 						<dt
 							css={{
-								fontSize: "0.7rem",
-								letterSpacing: "0.26em",
+								fontSize: $("font-size-xs"),
+								letterSpacing: $("letter-spacing-super-wide"),
 								textTransform: "uppercase",
 								color: $("jam-text-secondary"),
 							}}
@@ -133,7 +131,7 @@ function KeyFactsGrid({ facts }: { facts: MovieKeyFact[] }) {
 						</dt>
 						<dd
 							css={{
-								fontSize: "0.95rem",
+								fontSize: $("font-size-base"),
 								color: $("jam-text-primary"),
 								margin: 0,
 							}}
@@ -177,45 +175,39 @@ function getLinkStyles(variant: MovieExternalLink["variant"]) {
 	switch (variant) {
 		case "imdb":
 			return {
-				padding: "0.5rem 1.05rem",
-				borderRadius: "999px",
-				background:
-					"linear-gradient(135deg, rgba(255, 196, 87, 0.2) 0%, rgba(255, 120, 63, 0.25) 100%)",
+				padding: `${$("spacing-2")} ${$("spacing-4")}`,
+				borderRadius: $("radius-full"),
+				background: $("gradient-warm-primary"),
 				color: $("jam-text-primary"),
-				border: "1px solid rgba(255, 255, 255, 0.16)",
-				boxShadow: "0 16px 30px rgba(9, 12, 38, 0.55)",
-				fontSize: "0.72rem",
+				border: `1px solid ${$("jam-border")}`,
+				boxShadow: $("shadow-elevated-lg"),
+				fontSize: $("font-size-sm"),
 				textTransform: "uppercase",
-				letterSpacing: "0.18em",
-				transition:
-					"transform 220ms ease, box-shadow 220ms ease, background 220ms ease",
+				letterSpacing: $("letter-spacing-ultra-wide"),
+				transition: $("transition-elevate"),
 				"&:hover": {
-					transform: "translateY(-4px)",
-					boxShadow: "0 28px 46px rgba(9, 12, 38, 0.65)",
-					background:
-						"linear-gradient(135deg, rgba(255, 196, 87, 0.3) 0%, rgba(255, 120, 63, 0.35) 100%)",
+					transform: $("transform-raise-sm"),
+					boxShadow: $("shadow-elevated-xl"),
+					background: $("gradient-warm-primary"),
 				},
 			};
-		case "tmdb":
+		// case "tmdb":
 		default:
 			return {
-				padding: "0.5rem 1.05rem",
-				borderRadius: "999px",
-				background:
-					"linear-gradient(135deg, rgba(63, 241, 255, 0.18) 0%, rgba(255, 73, 210, 0.22) 100%)",
+				padding: `${$("spacing-2")} ${$("spacing-4")}`,
+				borderRadius: $("radius-full"),
+				background: $("gradient-accent-primary"),
 				color: $("jam-text-primary"),
-				border: "1px solid rgba(255, 255, 255, 0.16)",
-				boxShadow: "0 16px 30px rgba(9, 12, 38, 0.55)",
-				fontSize: "0.72rem",
+				border: `1px solid ${$("jam-border")}`,
+				boxShadow: $("shadow-elevated-lg"),
+				fontSize: $("font-size-sm"),
 				textTransform: "uppercase",
-				letterSpacing: "0.18em",
-				transition:
-					"transform 220ms ease, box-shadow 220ms ease, background 220ms ease",
+				letterSpacing: $("letter-spacing-ultra-wide"),
+				transition: $("transition-elevate"),
 				"&:hover": {
-					transform: "translateY(-4px)",
-					boxShadow: "0 28px 46px rgba(9, 12, 38, 0.65)",
-					background:
-						"linear-gradient(135deg, rgba(63, 241, 255, 0.28) 0%, rgba(255, 73, 210, 0.32) 100%)",
+					transform: $("transform-raise-sm"),
+					boxShadow: $("shadow-elevated-xl"),
+					background: $("gradient-accent-primary"),
 				},
 			};
 	}

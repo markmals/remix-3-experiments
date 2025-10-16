@@ -414,10 +414,13 @@
 
     --letter-spacing-tighter: -0.05em;
     --letter-spacing-tight: -0.025em;
-    --letter-spacing-normal: 0em;
-    --letter-spacing-wide: 0.025em;
-    --letter-spacing-wider: 0.05em;
-    --letter-spacing-widest: 0.1em;
+	--letter-spacing-normal: 0em;
+	--letter-spacing-wide: 0.025em;
+	--letter-spacing-wider: 0.05em;
+	--letter-spacing-widest: 0.1em;
+	--letter-spacing-extra-wide: 0.08em;
+	--letter-spacing-ultra-wide: 0.18em;
+	--letter-spacing-super-wide: 0.32em;
 
     --line-height-none: 1;
     --line-height-tight: 1.25;
@@ -457,4 +460,110 @@
     );
     --jam-shadow-soft: 0 25px 70px rgba(7, 10, 30, 0.65);
     --jam-shadow-pop: 0 18px 38px rgba(0, 0, 0, 0.45);
+
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --font-size-display-lg: clamp(2rem, 5vw, 3.5rem);
+    --font-size-display-lg--line-height: 1.1;
+
+    --shadow-elevated-lg: 0 16px 30px rgba(9, 12, 38, 0.55);
+    --shadow-elevated-xl: 0 28px 46px rgba(9, 12, 38, 0.65);
+    --shadow-inset-subtle: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    --shadow-text-glow: 0 4px 20px rgba(51, 241, 255, 0.2);
+
+    --jam-shadow-float: 0 12px 24px rgba(5, 7, 24, 0.45);
+    --jam-text-shadow-glow: 0 0 12px rgba(51, 241, 255, 0.8);
+
+    --gradient-accent-soft: linear-gradient(135deg, rgba(12, 16, 36, 0.55) 0%, rgba(26, 18, 46, 0.39) 45%, rgba(64, 22, 66, 0.28) 100%);
+    --gradient-accent-primary: linear-gradient(135deg, rgba(63, 241, 255, 0.18) 0%, rgba(255, 73, 210, 0.22) 100%);
+    --gradient-warm-primary: linear-gradient(135deg, rgba(255, 196, 87, 0.2) 0%, rgba(255, 120, 63, 0.25) 100%);
+
+    --blur-lg: 14px;
+    --blur-xl: 18px;
+    --transform-raise-sm: translateY(-4px);
+    --transition-elevate: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+    --transition-fast: opacity 200ms ease;
+    --transition-color: color 200ms ease;
+
+    --jam-carousel-card-max-width: 22rem;
+    --jam-scrollbar-size: 0.375rem;
+    --jam-scrollbar-thumb: rgba(255, 255, 255, 0.18);
+    --jam-mask-horizontal-fade: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.65) 6%, rgba(0, 0, 0, 0.85) 94%, transparent 100%);
+    --jam-shadow-carousel: 0 24px 36px rgba(5, 7, 24, 0.45);
+    --jam-shadow-carousel-hover: 0 40px 70px rgba(5, 7, 24, 0.55);
+    --jam-transform-raise-md: translateY(-6px);
+    --jam-border-strong: rgba(255, 255, 255, 0.16);
+    --jam-overlay-surface-footer: rgba(8, 10, 24, 0.88);
+    --jam-shadow-footer: 0 -18px 40px rgba(4, 6, 20, 0.45);
+    --jam-border-thick: 2px;
+    --jam-letter-spacing-accent: 0.14em;
+    --jam-spacing-offset-sm: 0.35rem;
+    --jam-overlay-surface-strong: rgba(8, 10, 28, 0.9);
+    --jam-transform-raise-lg: translateY(-8px);
+    --jam-background-aurora: radial-gradient(50% 50% at 20% 20%, rgba(51, 241, 255, 0.12) 0%, rgba(51, 241, 255, 0) 65%), radial-gradient(45% 45% at 80% 15%, rgba(255, 73, 210, 0.12) 0%, rgba(255, 73, 210, 0) 70%);
+    --jam-aurora-inset: -25% -30%;
+    --jam-blur-xxl: 60px;
+    --jam-opacity-strong: 0.9;
+    --blur-xl: 18px;
+    --jam-brand-height: 38px;
+    --jam-font-size-brand: 1.72rem;
+    --jam-letter-spacing-brand: 0.16em;
+    --jam-spacing-offset-xs: 2px;
+    --jam-nav-surface: rgba(5, 6, 18, 0.85);
+    --jam-shadow-nav: 0 18px 38px rgba(4, 6, 20, 0.55);
+    --jam-spacing-compact: 0.35rem;
+    --jam-spacing-relaxed: 0.65rem;
+    --jam-chip-padding-y: 0.45rem;
+    --jam-chip-padding-x: 0.85rem;
+    --jam-chip-active-background: rgba(27, 32, 60, 0.85);
+    --jam-chip-hover-background: rgba(27, 32, 60, 0.9);
+    --jam-chip-shadow: 0 12px 28px rgba(5, 7, 24, 0.45);
+    --jam-chip-transition: color 200ms ease, background 200ms ease, box-shadow 200ms ease, border 200ms ease;
+    --jam-button-padding-y: 0.35rem;
+    --jam-button-padding-x: 1.25rem;
+    --jam-indicator-width: 6px;
+    --jam-indicator-height: 34px;
+    --jam-border-soft: rgba(255, 255, 255, 0.08);
+    --jam-filter-poster: saturate(115%) contrast(108%);
+    --jam-gradient-poster-overlay: linear-gradient(180deg, rgba(5, 6, 18, 0) 55%, rgba(5, 6, 18, 0.75) 100%);
+    --jam-overlay-chip: rgba(13, 16, 33, 0.65);
+    --jam-overlay-chip-strong: rgba(13, 16, 33, 0.7);
+    --jam-shadow-button: 0 12px 30px rgba(4, 6, 18, 0.45);
+    --jam-transition-poster: transform 360ms cubic-bezier(0.19, 1, 0.22, 1);
+    --jam-transition-opacity: opacity 260ms ease;
+    --jam-transition-card: transform 280ms ease, box-shadow 280ms ease, border 280ms ease;
+    --jam-shadow-chip-group: 0 10px 30px rgba(4, 6, 18, 0.45);
+    --jam-logo-offset: 2px;
+    --color-transparent: transparent;
+    --jam-shadow-card-hover: 0 28px 70px rgba(5, 7, 24, 0.55);
+    --jam-shadow-card-focus: 0 30px 60px rgba(5, 7, 24, 0.55);
+    --jam-border-thin: 1px;
+    --jam-spacing-medium: 0.6rem;
+    --jam-spacing-mini: 0.15rem;
+    --jam-font-size-2xs: 0.65rem;
+    --jam-opacity-muted: 0.7;
+    --jam-overlay-rating: rgba(8, 10, 28, 0.8);
+    --jam-gradient-overlay-strong: linear-gradient(180deg, rgba(5, 6, 18, 0) 55%, rgba(5, 6, 18, 0.75) 100%);
+    --jam-shadow-highlight: 0 12px 24px rgba(5, 7, 24, 0.45);
+    --jam-filter-poster-hover: saturate(115%) contrast(108%);
+    --jam-rating-padding-y: 0.35rem;
+    --jam-rating-padding-x: 0.6rem;
+    --jam-border-muted: rgba(255, 255, 255, 0.1);
+    --jam-letter-spacing-title: 0.12em;
+    --jam-line-height-title: 1.35;
+    --jam-min-height-title: 3.2rem;
+    --jam-scale-poster-hover: scale(1.05);
+    --jam-letter-spacing-display: 0.26em;
+    --jam-flourish-width: 60px;
+    --jam-content-max-width: min(1160px, 94vw);
+    --jam-layout-min-height: 100vh;
+    --jam-breakpoint-compact: 720px;
+    --jam-opacity-divider: 0.5;
+    --jam-aspect-poster: 2 / 3;
+    --jam-aspect-portrait: 3 / 4;
+    --jam-z-nav: 50;
+    --jam-z-background: -1;
 }

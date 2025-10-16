@@ -10,7 +10,7 @@ type MovieShowcaseProps = {
 
 const sectionStyle = {
 	position: "relative" as const,
-	minWidth: "min(1160px, 94vw)",
+	minWidth: $("jam-content-max-width"),
 	margin: "auto",
 	padding: `${$("spacing-16")} ${$("spacing-4")} ${$("spacing-10")}`,
 	display: "grid",
@@ -23,30 +23,30 @@ const headerStyle = {
 	justifyContent: "space-between",
 	gap: $("spacing-4"),
 	textTransform: "uppercase" as const,
-	letterSpacing: "0.26em",
+	letterSpacing: $("jam-letter-spacing-display"),
 	color: $("jam-text-muted"),
 };
 
 const flourishStyle = {
 	display: "inline-flex",
 	alignItems: "center",
-	gap: "0.5rem",
-	fontSize: "0.75rem",
+	gap: $("spacing-2"),
+	fontSize: $("font-size-xs"),
 	color: $("jam-text-primary"),
 };
 
 const flourishBarStyle = {
 	display: "inline-flex",
-	width: "60px",
-	height: "2px",
-	borderRadius: "999px",
+	width: $("jam-flourish-width"),
+	height: $("jam-border-thick"),
+	borderRadius: $("radius-full"),
 	background: $("jam-gradient-primary"),
 };
 
 const gridStyle = {
 	display: "grid",
 	gap: $("spacing-6"),
-	gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+	gridTemplateColumns: `repeat(auto-fit, minmax(${ $("spacing-56") }, 1fr))`,
 };
 
 export function MovieShowcase({ title, label, movies }: MovieShowcaseProps) {

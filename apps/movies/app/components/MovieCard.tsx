@@ -59,33 +59,32 @@ export function MovieCard({ movie }: MovieCardProps) {
 				display: "grid",
 				gap: $("spacing-4"),
 				padding: $("spacing-4"),
-				borderRadius: "1.5rem",
+				borderRadius: $("radius-3xl"),
 				background: $("jam-surface"),
 				border: `1px solid ${$("jam-border")}`,
 				boxShadow: $("jam-shadow-pop"),
 				overflow: "hidden",
-				transition:
-					"transform 280ms ease, box-shadow 280ms ease, border 280ms ease",
+				transition: $("jam-transition-card"),
 				"&::before": {
 					content: '""',
 					position: "absolute",
-					inset: "1px",
-					borderRadius: "calc(1.5rem - 1px)",
+					inset: $("jam-border-thin"),
+					borderRadius: `calc(${ $("radius-3xl") } - ${ $("jam-border-thin") })`,
 					background: $("jam-gradient-soft"),
 					opacity: 0,
-					transition: "opacity 300ms ease",
+					transition: $("jam-transition-opacity"),
 					zIndex: 0,
 				},
 				"&:hover": {
-					transform: "translateY(-8px)",
-					boxShadow: "0 28px 70px rgba(5, 7, 24, 0.55)",
-					borderColor: "rgba(255, 255, 255, 0.16)",
+					transform: $("jam-transform-raise-lg"),
+					boxShadow: $("jam-shadow-card-hover"),
+					borderColor: $("jam-border-strong"),
 				},
 				"&:hover::before": {
 					opacity: 1,
 				},
 				"&:hover .movie-poster": {
-					transform: "scale(1.05)",
+					transform: $("jam-scale-poster-hover"),
 				},
 				"&:hover .poster-overlay": {
 					opacity: 1,
@@ -96,11 +95,11 @@ export function MovieCard({ movie }: MovieCardProps) {
 				css={{
 					position: "relative",
 					display: "block",
-					borderRadius: "1.2rem",
+					borderRadius: $("radius-2xl"),
 					overflow: "hidden",
 					background: $("jam-surface-alt"),
-					border: "1px solid rgba(255, 255, 255, 0.08)",
-					aspectRatio: "2 / 3",
+					border: `1px solid ${$("jam-border-soft")}`,
+					aspectRatio: $("jam-aspect-poster"),
 					zIndex: 1,
 				}}
 				href={routes.movies.show.href({ id: movie.id.toString() })}
@@ -112,8 +111,8 @@ export function MovieCard({ movie }: MovieCardProps) {
 						width: "100%",
 						height: "100%",
 						objectFit: "cover",
-						transition: "transform 360ms cubic-bezier(0.19, 1, 0.22, 1)",
-						filter: "saturate(115%) contrast(108%)",
+						transition: $("jam-transition-poster"),
+						filter: $("jam-filter-poster"),
 					}}
 					src={
 						movie.poster_path
@@ -121,17 +120,16 @@ export function MovieCard({ movie }: MovieCardProps) {
 							: FALLBACK_POSTER
 					}
 				/>
-				<div
-					class="poster-overlay"
-					css={{
-						position: "absolute",
-						inset: 0,
-						background:
-							"linear-gradient(180deg, rgba(5, 6, 18, 0) 55%, rgba(5, 6, 18, 0.75) 100%)",
-						opacity: 0,
-						transition: "opacity 260ms ease",
-					}}
-				/>
+			<div
+				class="poster-overlay"
+				css={{
+					position: "absolute",
+					inset: 0,
+					background: $("jam-gradient-overlay-strong"),
+					opacity: 0,
+					transition: $("jam-transition-opacity"),
+				}}
+			/>
 				{typeof rating === "number" ? (
 					<div
 						css={{
@@ -140,16 +138,16 @@ export function MovieCard({ movie }: MovieCardProps) {
 							left: $("spacing-3"),
 							display: "flex",
 							alignItems: "center",
-							gap: "0.35rem",
-							padding: "0.35rem 0.6rem",
-							borderRadius: "999px",
-							background: "rgba(8, 10, 28, 0.8)",
-							border: "1px solid rgba(255, 255, 255, 0.1)",
+							gap: $("jam-spacing-compact"),
+							padding: `${$("jam-rating-padding-y")} ${$("jam-rating-padding-x")}`,
+							borderRadius: $("radius-full"),
+							background: $("jam-overlay-rating"),
+							border: `1px solid ${$("jam-border-muted")}`,
 							color: $("jam-text-primary"),
-							fontSize: "0.75rem",
-							letterSpacing: "0.18em",
+							fontSize: $("font-size-xs"),
+							letterSpacing: $("letter-spacing-ultra-wide"),
 							textTransform: "uppercase",
-							boxShadow: "0 12px 24px rgba(5, 7, 24, 0.45)",
+							boxShadow: $("jam-shadow-highlight"),
 						}}
 					>
 						<span
@@ -157,12 +155,12 @@ export function MovieCard({ movie }: MovieCardProps) {
 								display: "inline-flex",
 								alignItems: "center",
 								justifyContent: "center",
-								width: "1rem",
-								height: "1rem",
+								width: $("spacing-4"),
+								height: $("spacing-4"),
 								color: $("jam-glow-cyan"),
-								fontSize: "0.85rem",
+								fontSize: $("font-size-sm"),
 								lineHeight: 1,
-								textShadow: "0 0 10px rgba(51, 241, 255, 0.75)",
+								textShadow: $("jam-text-shadow-glow"),
 							}}
 						>
 							★
@@ -182,7 +180,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 			<div
 				css={{
 					display: "grid",
-					gap: "0.6rem",
+					gap: $("jam-spacing-medium"),
 					zIndex: 1,
 				}}
 			>
@@ -190,16 +188,16 @@ export function MovieCard({ movie }: MovieCardProps) {
 					css={{
 						display: "inline-flex",
 						alignItems: "flex-start",
-						gap: "0.6rem",
-						fontSize: "1.05rem",
-						fontWeight: 600,
+						gap: $("jam-spacing-medium"),
+						fontSize: $("font-size-lg"),
+						fontWeight: $("font-weight-semibold"),
 						textTransform: "uppercase",
 						color: $("jam-text-primary"),
-						letterSpacing: "0.12em",
+						letterSpacing: $("jam-letter-spacing-title"),
 						textDecoration: "none",
-						lineHeight: 1.35,
-						minHeight: "3.2rem",
-						transition: "color 200ms ease",
+						lineHeight: $("jam-line-height-title"),
+						minHeight: $("jam-min-height-title"),
+						transition: $("transition-color"),
 					}}
 					class="movie-card-title"
 					href={routes.movies.show.href({ id: movie.id.toString() })}
@@ -211,35 +209,39 @@ export function MovieCard({ movie }: MovieCardProps) {
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "space-between",
-						padding: "0.55rem 0.7rem",
-						borderRadius: "0.95rem",
-						border: "1px solid rgba(255, 255, 255, 0.08)",
-						background: "rgba(13, 16, 33, 0.7)",
-						backdropFilter: "blur(18px)",
+						padding: `${$("spacing-2")} ${$("spacing-3")}`,
+						borderRadius: $("radius-2xl"),
+						border: `1px solid ${$("jam-border-soft")}`,
+						background: $("jam-overlay-chip-strong"),
+						backdropFilter: `blur(${ $("blur-xl") })`,
 						color: $("jam-text-muted"),
-						fontSize: "0.78rem",
-						letterSpacing: "0.18em",
+						fontSize: $("font-size-sm"),
+						letterSpacing: $("letter-spacing-ultra-wide"),
 					}}
 				>
 					<div
 						css={{
 							display: "grid",
-							gap: "0.15rem",
+							gap: $("jam-spacing-mini"),
 							textTransform: "uppercase",
 						}}
 					>
-						<span css={{ fontSize: "0.65rem", opacity: 0.7 }}>Release</span>
+						<span css={{ fontSize: $("jam-font-size-2xs"), opacity: $("jam-opacity-muted") }}>
+							Release
+						</span>
 						<span css={{ color: $("jam-text-primary") }}>{releaseLabel}</span>
 					</div>
 					<div
 						css={{
 							display: "grid",
-							gap: "0.15rem",
+							gap: $("jam-spacing-mini"),
 							textTransform: "uppercase",
 							textAlign: "right",
 						}}
 					>
-						<span css={{ fontSize: "0.65rem", opacity: 0.7 }}>Status</span>
+						<span css={{ fontSize: $("jam-font-size-2xs"), opacity: $("jam-opacity-muted") }}>
+							Status
+						</span>
 						<span css={{ color: statusColor }}>{status}</span>
 					</div>
 				</div>

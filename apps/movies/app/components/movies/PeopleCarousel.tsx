@@ -31,8 +31,8 @@ export function PeopleCarousel({
 		>
 			<h2
 				css={{
-					fontSize: "0.9rem",
-					letterSpacing: "0.3em",
+					fontSize: $("font-size-sm"),
+					letterSpacing: $("letter-spacing-super-wide"),
 					textTransform: "uppercase",
 					color: $("jam-text-secondary"),
 				}}
@@ -43,18 +43,18 @@ export function PeopleCarousel({
 				css={{
 					display: "grid",
 					gridAutoFlow: "column",
-					gridAutoColumns: "minmax(200px, 240px)",
+					gridAutoColumns: `minmax(${$("spacing-52")}, ${$("spacing-60")})`,
 					gap: $("spacing-4"),
 					overflowX: "auto",
 					paddingBottom: $("spacing-2"),
 					scrollSnapType: "x mandatory",
 					WebkitOverflowScrolling: "touch",
 					"&::-webkit-scrollbar": {
-						height: "6px",
+						height: $("jam-scrollbar-size"),
 					},
 					"&::-webkit-scrollbar-thumb": {
-						background: "rgba(255, 255, 255, 0.18)",
-						borderRadius: "999px",
+						background: $("jam-scrollbar-thumb"),
+						borderRadius: $("radius-full"),
 					},
 				}}
 			>
@@ -67,10 +67,10 @@ export function PeopleCarousel({
 								css={{
 									position: "relative",
 									width: "100%",
-									aspectRatio: "3 / 4",
-									borderRadius: "0.8rem",
+									aspectRatio: $("jam-aspect-portrait"),
+									borderRadius: $("radius-2xl"),
 									overflow: "hidden",
-									border: "1px solid rgba(255, 255, 255, 0.08)",
+									border: `1px solid ${$("jam-border")}`,
 								}}
 							>
 								<img
@@ -79,17 +79,17 @@ export function PeopleCarousel({
 										width: "100%",
 										height: "100%",
 										objectFit: "cover",
-									}}
+								}}
 									src={person.profileUrl}
 								/>
 							</div>
 							<strong
 								css={{
-									fontSize: "1rem",
+									fontSize: $("font-size-base"),
 									color: $("jam-text-primary"),
-									letterSpacing: "0.08em",
+									letterSpacing: $("letter-spacing-extra-wide"),
 									textTransform: "uppercase",
-								}}
+							}}
 							>
 								{person.name}
 							</strong>
@@ -97,10 +97,10 @@ export function PeopleCarousel({
 								<span
 									css={{
 										color: $("jam-text-muted"),
-										fontSize: "0.85rem",
-										letterSpacing: "0.14em",
+										fontSize: $("font-size-sm"),
+										letterSpacing: $("letter-spacing-ultra-wide"),
 										textTransform: "uppercase",
-									}}
+								}}
 								>
 									{caption}
 								</span>
@@ -111,21 +111,20 @@ export function PeopleCarousel({
 					const sharedStyles = {
 						display: "grid",
 						gridTemplateRows: "auto auto 1fr",
-						gap: "0.6rem",
-						padding: "1rem",
-						borderRadius: "1.1rem",
+						gap: $("spacing-3"),
+						padding: $("spacing-4"),
+						borderRadius: $("radius-3xl"),
 						background: $("jam-surface"),
 						border: `1px solid ${$("jam-border")}`,
 						boxShadow: $("jam-shadow-pop"),
 						textDecoration: "none",
 						color: $("jam-text-primary"),
 						scrollSnapAlign: "center",
-						transition:
-							"transform 220ms ease, box-shadow 220ms ease, border 220ms ease",
+						transition: $("transition-elevate"),
 						"&:hover": {
-							transform: "translateY(-6px)",
-							boxShadow: "0 30px 60px rgba(5, 7, 24, 0.55)",
-							border: "1px solid rgba(255, 255, 255, 0.16)",
+							transform: $("jam-transform-raise-md"),
+							boxShadow: $("jam-shadow-carousel-hover"),
+							border: `1px solid ${$("jam-border-strong")}`,
 						},
 					};
 
