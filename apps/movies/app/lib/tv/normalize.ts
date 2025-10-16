@@ -4,6 +4,7 @@ import {
 	formatCountries,
 	formatGenres,
 	formatLanguages,
+	formatReleaseDate,
 	formatStudios,
 } from "~/lib/movies/format.ts";
 import type {
@@ -116,6 +117,17 @@ function buildCrewSummaries(credits: SeriesCredits): PersonSummary[] {
 	}));
 }
 
+const minuteFormatter = new Intl.NumberFormat("en-US", {
+	style: "unit",
+	unit: "minute",
+	unitDisplay: "long",
+});
+
+const listFormatter = new Intl.ListFormat("en-US", {
+	style: "narrow",
+	type: "conjunction",
+});
+
 function formatEpisodeRuntime(runtime?: number[] | null): string | undefined {
 	if (!runtime?.length) return undefined;
 	const unique = [...new Set(runtime)].filter((value) =>
@@ -123,9 +135,9 @@ function formatEpisodeRuntime(runtime?: number[] | null): string | undefined {
 	);
 	if (!unique.length) return undefined;
 	if (unique.length === 1) {
-		return `${unique[0]} minutes`;
+		return minuteFormatter.format(unique[0]);
 	}
-	return `${Math.min(...unique)}-${Math.max(...unique)} minutes`;
+	return `${minuteFormatter.format(Math.min(...unique))}-${minuteFormatter.format(Math.max(...unique))}`;
 }
 
 function formatNetworks(
@@ -135,7 +147,7 @@ function formatNetworks(
 		networks
 			?.map((network) => network.name)
 			.filter((name): name is string => Boolean(name)) ?? [];
-	return names.length ? names.join(", ") : undefined;
+	return names.length ? listFormatter.format(names) : undefined;
 }
 
 function formatCreators(
@@ -145,7 +157,7 @@ function formatCreators(
 		creators
 			?.map((creator) => creator.name)
 			.filter((name): name is string => Boolean(name)) ?? [];
-	return names.length ? names.join(", ") : undefined;
+	return names.length ? listFormatter.format(names) : undefined;
 }
 
 function buildKeyFacts(details: SeriesDetails): MovieKeyFact[] {
@@ -233,17 +245,6 @@ function buildExternalLinks(
 	}
 
 	return links;
-}
-
-function formatReleaseDate(dateString?: string | null): string | undefined {
-	if (!dateString) return undefined;
-	const date = new Date(dateString);
-	if (Number.isNaN(date.getTime())) return undefined;
-	return date.toLocaleDateString("en-US", {
-		month: "long",
-		day: "numeric",
-		year: "numeric",
-	});
 }
 
 export function normalizeSeriesDetails({

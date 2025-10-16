@@ -4,6 +4,16 @@ import { cssvar as $ } from "~/utils/css-var.ts";
 const FALLBACK_POSTER =
 	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='48%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='400' height='600' fill='url(%23g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23f4f5ff' font-family='sans-serif' font-size='42' letter-spacing='8'>RMX</text></svg>";
 
+const releaseDateFormatter = new Intl.DateTimeFormat("en-US", {
+	month: "short",
+	year: "numeric",
+});
+
+const ratingFormatter = new Intl.NumberFormat("en-US", {
+	minimumFractionDigits: 1,
+	maximumFractionDigits: 1,
+});
+
 export interface Movie {
 	id: number;
 	title?: string;
@@ -26,10 +36,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 	})();
 	const releaseLabel =
 		releaseDate instanceof Date
-			? releaseDate.toLocaleDateString("en-US", {
-					month: "short",
-					year: "numeric",
-				})
+			? releaseDateFormatter.format(releaseDate)
 			: releaseDate;
 	const status = (() => {
 		if (!(releaseDate instanceof Date) || Number.isNaN(releaseDate.getTime()))
@@ -168,7 +175,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 						>
 							★
 						</span>
-						{rating.toFixed(1)}
+						{ratingFormatter.format(rating)}
 					</div>
 				) : null}
 				<div

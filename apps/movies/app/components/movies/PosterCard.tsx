@@ -1,5 +1,10 @@
 import { cssvar as $ } from "~/utils/css-var.ts";
 
+const ratingFormatter = new Intl.NumberFormat("en-US", {
+	minimumFractionDigits: 1,
+	maximumFractionDigits: 1,
+});
+
 interface PosterCardProps {
 	title: string;
 	posterUrl: string;
@@ -73,7 +78,7 @@ export function PosterCard({
 					>
 						★
 					</span>
-					{rating.toFixed(1)}
+					{ratingFormatter.format(rating)}
 				</div>
 			) : null}
 		</div>

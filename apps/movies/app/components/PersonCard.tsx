@@ -4,6 +4,11 @@ import { cssvar as $ } from "~/utils/css-var.ts";
 const FALLBACK_PROFILE =
 	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='48%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='400' height='600' fill='url(%23g)'/><circle cx='200' cy='220' r='80' fill='%23f4f5ff' opacity='0.3'/><path d='M120 400 Q200 320 280 400' stroke='%23f4f5ff' stroke-width='20' fill='none' opacity='0.3'/></svg>";
 
+const popularityFormatter = new Intl.NumberFormat("en-US", {
+	minimumFractionDigits: 1,
+	maximumFractionDigits: 1,
+});
+
 export interface Person {
 	id: number;
 	name?: string;
@@ -137,7 +142,7 @@ export function PersonCard({ person }: PersonCardProps) {
 						>
 							♦
 						</span>
-						{popularity.toFixed(1)}
+						{popularityFormatter.format(popularity)}
 					</div>
 				) : null}
 			</a>
