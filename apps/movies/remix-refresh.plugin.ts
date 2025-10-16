@@ -7,6 +7,7 @@ const DEFAULT_MATCHERS: Matcher[] = [
 	/\/app\/components\//,
 	/\/app\/document\.tsx?$/,
 	/\/app\/routes\.tsx?$/,
+	/\/app\/router\.tsx?$/,
 	/\/app\/styles\//,
 ];
 

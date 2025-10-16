@@ -24,6 +24,7 @@
 		"@types/node": "catalog:dev",
 		"@typescript/native-preview": "7.0.0-dev.20251014.1",
 		"apib2swagger": "^1.17.1",
+		"navigation-api-types": "^0.6.1",
 		"nitro": "catalog:dev",
 		"openapi-typescript": "^7.10.0",
 		"vite": "catalog:dev"

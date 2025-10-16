@@ -15,4 +15,13 @@ export const routes = route({
 	}),
 
 	about: "/about",
+
+	// Fragment routes for client-side navigation
+	fragments: route("/fragments", {
+		movieList: "/movie-list",
+		movieDetails: "/movie-details/:id",
+	}),
+
+	// Assets for hydrated components
+	assets: "/assets/*path",
 });

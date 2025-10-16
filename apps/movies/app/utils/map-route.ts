@@ -1,49 +1,91 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: Needed for type coercion */
-import type { InferRouteHandler, Route, Router } from "@remix-run/fetch-router";
+/** biome-ignore-all lint/suspicious/noExplicitAny: Type coercison */
+import type {
+	InferRouteHandler,
+	Middleware,
+	RequestContext,
+	RequestHandler,
+	Route,
+	Router,
+} from "@remix-run/fetch-router";
 
 type RouteLike = Route | string;
 
 type HandlerReturn<T extends RouteLike> = InferRouteHandler<T>;
-type HandlerCallable<T extends RouteLike> = Extract<
-	HandlerReturn<T>,
-	(...args: any[]) => any
->;
-type HandlerContext<T extends RouteLike> = Parameters<HandlerCallable<T>>[0];
-type LoadedModule<T extends RouteLike> = Promise<
-	{
-		default?: HandlerReturn<T>;
-		handler?: HandlerReturn<T>;
-	} & Record<string, unknown>
->;
+type HandlerWithMiddleware = {
+	use: Middleware<any, any>[];
+	handler: RequestHandler<any, any>;
+};
+type PlainHandler = RequestHandler<any, any>;
+type AnyRequestContext = RequestContext<any, any>;
 
-function invokeHandler<T extends RouteLike>(
-	handler: HandlerReturn<T>,
-	context: HandlerContext<T>,
+async function runHandlerWithMiddleware(
+	handler: HandlerWithMiddleware,
+	context: AnyRequestContext,
 ) {
-	if (typeof handler === "function") {
-		return handler(context);
-	}
+	const { use, handler: requestHandler } = handler;
 
-	return handler.handler(context);
+	let index = -1;
+	const dispatch = async (i: number): Promise<Response> => {
+		if (i <= index) throw new Error("next() called multiple times");
+		index = i;
+
+		const middleware = use[i];
+		if (!middleware) {
+			return requestHandler(context);
+		}
+
+		let nextPromise: Promise<Response> | undefined;
+		const next = (moreContext?: Partial<AnyRequestContext>) => {
+			if (moreContext) {
+				Object.assign(
+					context as unknown as Record<string, unknown>,
+					moreContext,
+				);
+			}
+
+			nextPromise = dispatch(i + 1);
+			return nextPromise;
+		};
+
+		const response = await middleware(context, next);
+		if (response instanceof Response) {
+			return response;
+		}
+
+		if (nextPromise) {
+			return nextPromise;
+		}
+
+		return next();
+	};
+
+	return dispatch(0);
 }
 
 export async function lazyMap<T extends RouteLike>(
 	router: Router,
 	route: T,
-	load: () => LoadedModule<T>,
+	load: () => Promise<HandlerReturn<T>>,
 ) {
 	if (import.meta.dev) {
 		router.map(route, async (context) => {
-			const mod = await load();
-			const handler = (mod.default ?? mod.handler) as HandlerReturn<T>;
-			return invokeHandler(handler, context);
+			const handler = await load();
+			if (
+				typeof handler === "object" &&
+				handler != null &&
+				"use" in handler &&
+				"handler" in handler
+			) {
+				return runHandlerWithMiddleware(
+					handler as HandlerWithMiddleware,
+					context as AnyRequestContext,
+				);
+			}
+
+			return (handler as PlainHandler)(context as AnyRequestContext);
 		});
 	} else {
-		const mod = await load();
-		const handler = (mod.default ?? mod.handler) as HandlerReturn<T>;
-
-		router.map(route, async (context) => {
-			return invokeHandler(handler, context);
-		});
+		const handler = await load();
+		router.map(route, handler);
 	}
 }

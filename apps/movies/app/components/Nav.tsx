@@ -1,15 +1,28 @@
+import type { Route } from "@remix-run/fetch-router";
 import { routes } from "~/routes.ts";
 import { cssvar as $ } from "~/utils/css-var.ts";
 
 const BRAND_HEIGHT = "38px";
 
 const links = [
-	{ label: "Movies", href: routes.index.href() },
-	{ label: "TV Shows", href: routes.tv.index.href() },
-	{ label: "People", href: routes.people.index.href() },
+	{
+		label: "Movies",
+		route: routes.index,
+		matchers: [routes.index, routes.movies.show],
+	},
+	{
+		label: "TV Shows",
+		route: routes.tv.index,
+		matchers: [routes.tv.index, routes.tv.show],
+	},
+	{
+		label: "People",
+		route: routes.people.index,
+		matchers: [routes.people.index, routes.people.show],
+	},
 ];
 
-export function Nav() {
+export function Nav({ currentUrl }: { currentUrl?: string | URL } = {}) {
 	return (
 		<nav
 			class="nav"
@@ -116,32 +129,51 @@ export function Nav() {
 							boxShadow: "0 10px 30px rgba(4, 6, 18, 0.45)",
 						}}
 					>
-						{links.map((link) => (
-							<li key={link.label}>
-								<a
-									css={{
-										position: "relative",
-										display: "inline-flex",
-										alignItems: "center",
-										padding: "0.45rem 0.85rem",
-										borderRadius: "999px",
-										fontSize: "0.8rem",
-										letterSpacing: "0.14em",
-										textTransform: "uppercase",
-										color: $("jam-text-muted"),
-										textDecoration: "none",
-										transition: "color 200ms ease, background 200ms ease",
-										"&:hover": {
-											color: $("jam-text-primary"),
-											background: "rgba(27, 32, 60, 0.9)",
-										},
-									}}
-									href={link.href}
-								>
-									{link.label}
-								</a>
-							</li>
-						))}
+						{links.map((link) => {
+							const isActive = currentUrl
+								? link.matchers.some((route: Route) => route.match(currentUrl))
+								: false;
+
+							return (
+								<li key={link.label}>
+									<a
+										aria-current={isActive ? "page" : undefined}
+										css={{
+											position: "relative",
+											display: "inline-flex",
+											alignItems: "center",
+											padding: "0.45rem 0.85rem",
+											borderRadius: "999px",
+											fontSize: "0.8rem",
+											letterSpacing: "0.14em",
+											textTransform: "uppercase",
+											color: isActive
+												? $("jam-text-primary")
+												: $("jam-text-muted"),
+											textDecoration: "none",
+											background: isActive
+												? "rgba(27, 32, 60, 0.85)"
+												: "transparent",
+											boxShadow: isActive
+												? "0 12px 28px rgba(5, 7, 24, 0.45)"
+												: "none",
+											border: isActive
+												? `1px solid ${$("jam-border")}`
+												: "1px solid transparent",
+											transition:
+												"color 200ms ease, background 200ms ease, box-shadow 200ms ease, border 200ms ease",
+											"&:hover": {
+												color: $("jam-text-primary"),
+												background: "rgba(27, 32, 60, 0.9)",
+											},
+										}}
+										href={link.route.href()}
+									>
+										{link.label}
+									</a>
+								</li>
+							);
+						})}
 					</ul>
 					<a
 						css={{

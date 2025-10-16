@@ -2,7 +2,13 @@ import type { Remix } from "@remix-run/dom";
 import { Footer } from "./Footer.tsx";
 import { Nav } from "./Nav.tsx";
 
-export function Layout({ children }: { children: Remix.RemixNode }) {
+export function Layout({
+	children,
+	currentUrl,
+}: {
+	children: Remix.RemixNode;
+	currentUrl?: string | URL;
+}) {
 	return (
 		<div
 			css={{
@@ -37,7 +43,7 @@ export function Layout({ children }: { children: Remix.RemixNode }) {
 					}}
 				/>
 			</div>
-			<Nav />
+			<Nav currentUrl={currentUrl} />
 			<main
 				css={{
 					flex: 1,

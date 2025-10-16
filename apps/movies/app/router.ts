@@ -10,4 +10,9 @@ if (import.meta.dev) {
 	router.use(logger());
 }
 
-lazyMap(router, routes.index, () => import("./pages/home.tsx"));
+lazyMap(router, routes.index, () =>
+	import("./pages/movies.tsx").then((m) => m.index),
+);
+lazyMap(router, routes.movies.show, () =>
+	import("./pages/movies.tsx").then((m) => m.show),
+);

@@ -33,6 +33,25 @@ class TMDb {
 	/** Fetch detailed movie info */
 	async getMovieDetails(movieId: string | number) {
 		const { data } = await client.GET("/3/movie/{movie_id}", {
+			params: {
+				path: { movie_id: Number(movieId) },
+				query: { append_to_response: "images" },
+			},
+		});
+		return data;
+	}
+
+	/** Fetch movie credits (cast and crew) */
+	async getMovieCredits(movieId: string | number) {
+		const { data } = await client.GET("/3/movie/{movie_id}/credits", {
+			params: { path: { movie_id: Number(movieId) } },
+		});
+		return data;
+	}
+
+	/** Fetch external IDs for a movie (IMDb, etc.) */
+	async getMovieExternalIds(movieId: string | number) {
+		const { data } = await client.GET("/3/movie/{movie_id}/external_ids", {
 			params: { path: { movie_id: Number(movieId) } },
 		});
 		return data;

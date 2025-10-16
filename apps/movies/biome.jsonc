@@ -61,7 +61,7 @@
 				"useSelfClosingElements": "error",
 				"useConst": "error",
 				"useSingleVarDeclarator": "error",
-				"noUnusedTemplateLiteral": "error",
+				"noUnusedTemplateLiteral": "warn",
 				"useNumberNamespace": "error",
 				"noInferrableTypes": "error",
 				"noUselessElse": "error",

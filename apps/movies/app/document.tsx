@@ -17,6 +17,7 @@ export function Document({
 				<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 				<title>{title}</title>
 				{import.meta.dev ? <script src="/@vite/client" type="module" /> : null}
+				<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 				<link href={styles} rel="stylesheet" />
 				<link href="https://fonts.googleapis.com" rel="preconnect" />
 				<link
