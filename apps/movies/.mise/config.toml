@@ -5,12 +5,19 @@ pnpm = "latest"
 [env]
 _.path = ['{{config_root}}/node_modules/.bin']
 
+[tasks.install]
+description = "Install dependencies"
+sources = ["package.json"]
+run = "pnpm install"
+
 [tasks.dev]
 description = "Run the development server"
+depends = ["install"]
 run = "vite dev --host"
 
 [tasks.build]
 description = "Build the app"
+depends = ["install"]
 sources = [
   "../../pnpm-lock.yaml",
   "nitro.config.ts",
@@ -44,3 +51,13 @@ description = "Typecheck the entire project"
 # sources = ["app/**/*.{ts,tsx}"]
 depends = "generate-*"
 run = "tsgo --noEmit"
+
+[tasks.postinstall]
+description = "Generate types after npm package installation"
+run = """
+  if [ -z \"$GITHUB_ACTIONS\" ]; then
+    mise run generate-*
+  else
+    echo '✅ Skipping typegen in CI'
+  fi
+"""
