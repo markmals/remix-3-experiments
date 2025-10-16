@@ -12,7 +12,31 @@ class TMDb {
 	/** Fetch detailed TV series info */
 	async getSeriesDetails(seriesId: string | number) {
 		const { data } = await client.GET("/3/tv/{series_id}", {
+			params: {
+				path: { series_id: Number(seriesId) },
+				query: { append_to_response: "images" },
+			},
+		});
+		return data;
+	}
+
+	async getSeriesCredits(seriesId: string | number) {
+		const { data } = await client.GET("/3/tv/{series_id}/credits", {
 			params: { path: { series_id: Number(seriesId) } },
+		});
+		return data;
+	}
+
+	async getSeriesExternalIds(seriesId: string | number) {
+		const { data } = await client.GET("/3/tv/{series_id}/external_ids", {
+			params: { path: { series_id: Number(seriesId) } },
+		});
+		return data;
+	}
+
+	async getTrendingTV() {
+		const { data } = await client.GET("/3/trending/tv/{time_window}", {
+			params: { path: { time_window: "day" } },
 		});
 		return data;
 	}
@@ -53,6 +77,42 @@ class TMDb {
 	async getMovieExternalIds(movieId: string | number) {
 		const { data } = await client.GET("/3/movie/{movie_id}/external_ids", {
 			params: { path: { movie_id: Number(movieId) } },
+		});
+		return data;
+	}
+
+	/** Fetch popular people */
+	async getPopularPeople() {
+		const { data } = await client.GET("/3/person/popular");
+		return data;
+	}
+
+	/** Fetch detailed person info */
+	async getPersonDetails(personId: string | number) {
+		const { data } = await client.GET("/3/person/{person_id}", {
+			params: {
+				path: { person_id: Number(personId) },
+				query: { append_to_response: "images" },
+			},
+		});
+		return data;
+	}
+
+	/** Fetch combined credits for a person (movies and TV) */
+	async getPersonCombinedCredits(personId: string | number) {
+		const { data } = await client.GET(
+			"/3/person/{person_id}/combined_credits",
+			{
+				params: { path: { person_id: String(personId) } },
+			},
+		);
+		return data;
+	}
+
+	/** Fetch external IDs for a person (IMDb, etc.) */
+	async getPersonExternalIds(personId: string | number) {
+		const { data } = await client.GET("/3/person/{person_id}/external_ids", {
+			params: { path: { person_id: Number(personId) } },
 		});
 		return data;
 	}

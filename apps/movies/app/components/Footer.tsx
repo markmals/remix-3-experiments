@@ -57,40 +57,40 @@ export function Footer() {
 					</span> */}
 				</div>
 				<div
-				css={{
-					display: "flex",
-					alignItems: "center",
-					gap: $("spacing-3"),
-					textTransform: "uppercase",
-					[COMPACT_MEDIA_QUERY]: {
-						width: "100%",
-						justifyContent: "space-between",
-					},
+					css={{
+						display: "flex",
+						alignItems: "center",
+						gap: $("spacing-3"),
+						textTransform: "uppercase",
+						[COMPACT_MEDIA_QUERY]: {
+							width: "100%",
+							justifyContent: "space-between",
+						},
 					}}
 				>
 					Made By
-				<a
-					css={{
-						color: $("jam-text-primary"),
-						textDecoration: "none",
-						position: "relative",
-						fontSize: $("font-size-sm"),
-						letterSpacing: $("jam-letter-spacing-accent"),
-						"&::after": {
-							content: '""',
-							position: "absolute",
-							left: 0,
-							bottom: `calc(-1 * ${$("jam-spacing-offset-sm")})`,
-							width: "100%",
-							height: $("jam-border-thick"),
-							background: $("jam-gradient-primary"),
-							opacity: 0,
-							transition: $("transition-fast"),
-						},
-						"&:hover::after": {
-							opacity: 1,
-						},
-					}}
+					<a
+						css={{
+							color: $("jam-text-primary"),
+							textDecoration: "none",
+							position: "relative",
+							fontSize: $("font-size-sm"),
+							letterSpacing: $("jam-letter-spacing-accent"),
+							"&::after": {
+								content: '""',
+								position: "absolute",
+								left: 0,
+								bottom: `calc(-1 * ${$("jam-spacing-offset-sm")})`,
+								width: "100%",
+								height: $("jam-border-thick"),
+								background: $("jam-gradient-primary"),
+								opacity: 0,
+								transition: $("transition-fast"),
+							},
+							"&:hover::after": {
+								opacity: 1,
+							},
+						}}
 						href="https://bsky.app/profile/malstrom.me"
 						rel="noopener noreferrer"
 						target="_blank"
@@ -100,17 +100,17 @@ export function Footer() {
 					<span aria-hidden="true" css={{ opacity: $("jam-opacity-divider") }}>
 						•
 					</span>
-				<a
-					css={{
-						textDecoration: "none",
-						color: $("jam-text-muted"),
-						letterSpacing: $("jam-letter-spacing-accent"),
-						fontSize: $("font-size-sm"),
-						transition: $("transition-color"),
-						"&:hover": {
-							color: $("jam-text-primary"),
-						},
-					}}
+					<a
+						css={{
+							textDecoration: "none",
+							color: $("jam-text-muted"),
+							letterSpacing: $("jam-letter-spacing-accent"),
+							fontSize: $("font-size-sm"),
+							transition: $("transition-color"),
+							"&:hover": {
+								color: $("jam-text-primary"),
+							},
+						}}
 						href="https://www.themoviedb.org/documentation/api"
 						rel="noopener noreferrer"
 						target="_blank"

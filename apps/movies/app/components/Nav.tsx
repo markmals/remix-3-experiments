@@ -32,7 +32,7 @@ export function Nav({ currentUrl }: { currentUrl?: string | URL } = {}) {
 				position: "sticky",
 				top: 0,
 				zIndex: $("jam-z-nav"),
-				backdropFilter: `blur(${ $("blur-xl") })`,
+				backdropFilter: `blur(${$("blur-xl")})`,
 				background: $("jam-nav-surface"),
 				borderBottom: `1px solid ${$("jam-border")}`,
 				boxShadow: $("jam-shadow-nav"),
@@ -84,25 +84,25 @@ export function Nav({ currentUrl }: { currentUrl?: string | URL } = {}) {
 							width="819"
 						/>
 					</span>
-				<span
-					css={{
-						display: "inline-flex",
-						alignItems: "end",
-						height: BRAND_HEIGHT,
-						textTransform: "uppercase",
-						letterSpacing: $("jam-letter-spacing-brand"),
-					}}
-					>
 					<span
 						css={{
 							display: "inline-flex",
-							alignItems: "center",
-							fontSize: $("jam-font-size-brand"),
-							fontWeight: $("font-weight-semibold"),
-							letterSpacing: $("jam-letter-spacing-accent"),
-							lineHeight: 1,
-							paddingTop: $("jam-spacing-offset-xs"),
+							alignItems: "end",
+							height: BRAND_HEIGHT,
+							textTransform: "uppercase",
+							letterSpacing: $("jam-letter-spacing-brand"),
 						}}
+					>
+						<span
+							css={{
+								display: "inline-flex",
+								alignItems: "center",
+								fontSize: $("jam-font-size-brand"),
+								fontWeight: $("font-weight-semibold"),
+								letterSpacing: $("jam-letter-spacing-accent"),
+								lineHeight: 1,
+								paddingTop: $("jam-spacing-offset-xs"),
+							}}
 						>
 							Movies
 						</span>
@@ -136,38 +136,36 @@ export function Nav({ currentUrl }: { currentUrl?: string | URL } = {}) {
 								? link.matchers.some((route: Route) => route.match(currentUrl))
 								: false;
 
-						return (
-							<li key={link.label}>
-								<a
-									aria-current={isActive ? "page" : undefined}
-									css={{
-										position: "relative",
-										display: "inline-flex",
-										alignItems: "center",
-										padding: `${$("jam-chip-padding-y")} ${$("jam-chip-padding-x")}`,
-										borderRadius: $("radius-full"),
-										fontSize: $("font-size-sm"),
-										letterSpacing: $("jam-letter-spacing-accent"),
-										textTransform: "uppercase",
-										color: isActive
-											? $("jam-text-primary")
-											: $("jam-text-muted"),
-										textDecoration: "none",
-										background: isActive
-											? $("jam-chip-active-background")
-											: "transparent",
-										boxShadow: isActive
-											? $("jam-chip-shadow")
-											: "none",
-										border: isActive
-											? `1px solid ${$("jam-border")}`
-											: `1px solid ${$("color-transparent")}`,
-										transition: $("jam-chip-transition"),
-										"&:hover": {
-											color: $("jam-text-primary"),
-											background: $("jam-chip-hover-background"),
-										},
-									}}
+							return (
+								<li key={link.label}>
+									<a
+										aria-current={isActive ? "page" : undefined}
+										css={{
+											position: "relative",
+											display: "inline-flex",
+											alignItems: "center",
+											padding: `${$("jam-chip-padding-y")} ${$("jam-chip-padding-x")}`,
+											borderRadius: $("radius-full"),
+											fontSize: $("font-size-sm"),
+											letterSpacing: $("jam-letter-spacing-accent"),
+											textTransform: "uppercase",
+											color: isActive
+												? $("jam-text-primary")
+												: $("jam-text-muted"),
+											textDecoration: "none",
+											background: isActive
+												? $("jam-chip-active-background")
+												: "transparent",
+											boxShadow: isActive ? $("jam-chip-shadow") : "none",
+											border: isActive
+												? `1px solid ${$("jam-border")}`
+												: `1px solid ${$("color-transparent")}`,
+											transition: $("jam-chip-transition"),
+											"&:hover": {
+												color: $("jam-text-primary"),
+												background: $("jam-chip-hover-background"),
+											},
+										}}
 										href={link.route.href()}
 									>
 										{link.label}
@@ -176,34 +174,34 @@ export function Nav({ currentUrl }: { currentUrl?: string | URL } = {}) {
 							);
 						})}
 					</ul>
-				<a
-					css={{
-						display: "flex",
-						alignItems: "center",
-						gap: $("jam-spacing-relaxed"),
-						padding: `${$("jam-button-padding-y")} ${$("jam-button-padding-x")}`,
-						borderRadius: $("radius-full"),
-						border: `1px solid ${$("jam-border")}`,
-						background: $("jam-surface-alt"),
-						boxShadow: $("jam-shadow-button"),
-						textTransform: "uppercase",
-						fontSize: $("font-size-xs"),
-						letterSpacing: $("letter-spacing-super-wide"),
-						color: $("jam-text-muted"),
-					}}
+					<a
+						css={{
+							display: "flex",
+							alignItems: "center",
+							gap: $("jam-spacing-relaxed"),
+							padding: `${$("jam-button-padding-y")} ${$("jam-button-padding-x")}`,
+							borderRadius: $("radius-full"),
+							border: `1px solid ${$("jam-border")}`,
+							background: $("jam-surface-alt"),
+							boxShadow: $("jam-shadow-button"),
+							textTransform: "uppercase",
+							fontSize: $("font-size-xs"),
+							letterSpacing: $("letter-spacing-super-wide"),
+							color: $("jam-text-muted"),
+						}}
 						href="https://github.com/remix-run/remix"
 						rel="noopener"
 						target="_blank"
 					>
-					<span
-						css={{
-							display: "inline-flex",
-							width: $("jam-indicator-width"),
-							height: $("jam-indicator-height"),
-							borderRadius: $("radius-full"),
-							background: $("jam-gradient-primary"),
-						}}
-					/>
+						<span
+							css={{
+								display: "inline-flex",
+								width: $("jam-indicator-width"),
+								height: $("jam-indicator-height"),
+								borderRadius: $("radius-full"),
+								background: $("jam-gradient-primary"),
+							}}
+						/>
 						Remix 3 Preview
 					</a>
 				</div>

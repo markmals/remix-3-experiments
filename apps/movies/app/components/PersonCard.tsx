@@ -1,59 +1,28 @@
 import { routes } from "~/routes.ts";
 import { cssvar as $ } from "~/utils/css-var.ts";
 
-const FALLBACK_POSTER =
-	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='48%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='400' height='600' fill='url(%23g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23f4f5ff' font-family='sans-serif' font-size='42' letter-spacing='8'>RMX</text></svg>";
+const FALLBACK_PROFILE =
+	"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23040a1a'/><stop offset='48%' stop-color='%23121c3c'/><stop offset='100%' stop-color='%23ff3fb8'/></linearGradient></defs><rect width='400' height='600' fill='url(%23g)'/><circle cx='200' cy='220' r='80' fill='%23f4f5ff' opacity='0.3'/><path d='M120 400 Q200 320 280 400' stroke='%23f4f5ff' stroke-width='20' fill='none' opacity='0.3'/></svg>";
 
-export interface Movie {
+export interface Person {
 	id: number;
-	title?: string;
-	poster_path?: string | null;
-	vote_average: number;
-	release_date?: string;
+	name?: string;
+	profile_path?: string | null;
+	known_for_department?: string;
+	popularity?: number;
 	href?: string;
 }
 
-export type MovieCardProps = { movie: Movie };
+export type PersonCardProps = { person: Person };
 
-export function MovieCard({ movie }: MovieCardProps) {
-	const rating = Number.isFinite(movie.vote_average)
-		? Math.round(movie.vote_average * 10) / 10
-		: undefined;
-	const releaseDate = (() => {
-		if (!movie.release_date) return "TBA";
-		const date = new Date(movie.release_date);
-		return Number.isNaN(date.getTime()) ? movie.release_date : date;
-	})();
-	const releaseLabel =
-		releaseDate instanceof Date
-			? releaseDate.toLocaleDateString("en-US", {
-					month: "short",
-					year: "numeric",
-				})
-			: releaseDate;
-	const status = (() => {
-		if (!(releaseDate instanceof Date) || Number.isNaN(releaseDate.getTime()))
-			return "Unscheduled";
-		const now = new Date();
-		let monthsSinceRelease =
-			(now.getFullYear() - releaseDate.getFullYear()) * 12 +
-			(now.getMonth() - releaseDate.getMonth());
-		if (now.getDate() < releaseDate.getDate()) {
-			monthsSinceRelease -= 1;
-		}
-		if (monthsSinceRelease < 3) return "New Release";
-		if (monthsSinceRelease < 6) return "Fresh Pick";
-		if (monthsSinceRelease < 36) return "Recent Favorite";
-		return "Cult Classic";
-	})();
-	const statusColor =
-		status === "New Release"
-			? $("jam-glow-magenta")
-			: status === "Fresh Pick"
-				? $("jam-glow-cyan")
-				: $("jam-text-primary");
+export function PersonCard({ person }: PersonCardProps) {
+	const popularity =
+		person.popularity !== undefined && Number.isFinite(person.popularity)
+			? Math.round(person.popularity * 10) / 10
+			: undefined;
+	const department = person.known_for_department ?? "Entertainment";
 	const detailsHref =
-		movie.href ?? routes.movies.show.href({ id: movie.id.toString() });
+		person.href ?? routes.people.show.href({ id: person.id.toString() });
 
 	return (
 		<article
@@ -86,10 +55,10 @@ export function MovieCard({ movie }: MovieCardProps) {
 				"&:hover::before": {
 					opacity: 1,
 				},
-				"&:hover .movie-poster": {
+				"&:hover .person-profile": {
 					transform: $("jam-scale-poster-hover"),
 				},
-				"&:hover .poster-overlay": {
+				"&:hover .profile-overlay": {
 					opacity: 1,
 				},
 			}}
@@ -108,8 +77,8 @@ export function MovieCard({ movie }: MovieCardProps) {
 				href={detailsHref}
 			>
 				<img
-					alt={`${movie.title ?? "Movie"} Poster`}
-					class="movie-poster"
+					alt={`${person.name ?? "Person"} Profile`}
+					class="person-profile"
 					css={{
 						width: "100%",
 						height: "100%",
@@ -118,13 +87,13 @@ export function MovieCard({ movie }: MovieCardProps) {
 						filter: $("jam-filter-poster"),
 					}}
 					src={
-						movie.poster_path
-							? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-							: FALLBACK_POSTER
+						person.profile_path
+							? `https://image.tmdb.org/t/p/w500${person.profile_path}`
+							: FALLBACK_PROFILE
 					}
 				/>
 				<div
-					class="poster-overlay"
+					class="profile-overlay"
 					css={{
 						position: "absolute",
 						inset: 0,
@@ -133,7 +102,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 						transition: $("jam-transition-opacity"),
 					}}
 				/>
-				{typeof rating === "number" ? (
+				{typeof popularity === "number" ? (
 					<div
 						css={{
 							position: "absolute",
@@ -160,25 +129,17 @@ export function MovieCard({ movie }: MovieCardProps) {
 								justifyContent: "center",
 								width: $("spacing-4"),
 								height: $("spacing-4"),
-								color: $("jam-glow-cyan"),
+								color: $("jam-glow-magenta"),
 								fontSize: $("font-size-sm"),
 								lineHeight: 1,
 								textShadow: $("jam-text-shadow-glow"),
 							}}
 						>
-							★
+							♦
 						</span>
-						{rating.toFixed(1)}
+						{popularity.toFixed(1)}
 					</div>
 				) : null}
-				<div
-					css={{
-						position: "absolute",
-						inset: 0,
-						pointerEvents: "none",
-						borderRadius: "inherit",
-					}}
-				/>
 			</a>
 			<div
 				css={{
@@ -202,16 +163,16 @@ export function MovieCard({ movie }: MovieCardProps) {
 						minHeight: $("jam-min-height-title"),
 						transition: $("transition-color"),
 					}}
-					class="movie-card-title"
+					class="person-card-title"
 					href={detailsHref}
 				>
-					<span>{movie.title}</span>
+					<span>{person.name}</span>
 				</a>
 				<div
 					css={{
 						display: "flex",
 						alignItems: "center",
-						justifyContent: "space-between",
+						justifyContent: "center",
 						padding: `${$("spacing-2")} ${$("spacing-3")}`,
 						borderRadius: $("radius-2xl"),
 						border: `1px solid ${$("jam-border-soft")}`,
@@ -227,6 +188,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 							display: "grid",
 							gap: $("jam-spacing-mini"),
 							textTransform: "uppercase",
+							textAlign: "center",
 						}}
 					>
 						<span
@@ -235,27 +197,9 @@ export function MovieCard({ movie }: MovieCardProps) {
 								opacity: $("jam-opacity-muted"),
 							}}
 						>
-							Release
+							Known For
 						</span>
-						<span css={{ color: $("jam-text-primary") }}>{releaseLabel}</span>
-					</div>
-					<div
-						css={{
-							display: "grid",
-							gap: $("jam-spacing-mini"),
-							textTransform: "uppercase",
-							textAlign: "right",
-						}}
-					>
-						<span
-							css={{
-								fontSize: $("jam-font-size-2xs"),
-								opacity: $("jam-opacity-muted"),
-							}}
-						>
-							Status
-						</span>
-						<span css={{ color: statusColor }}>{status}</span>
+						<span css={{ color: $("jam-text-primary") }}>{department}</span>
 					</div>
 				</div>
 			</div>

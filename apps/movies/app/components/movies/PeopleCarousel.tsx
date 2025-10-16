@@ -79,7 +79,7 @@ export function PeopleCarousel({
 										width: "100%",
 										height: "100%",
 										objectFit: "cover",
-								}}
+									}}
 									src={person.profileUrl}
 								/>
 							</div>
@@ -89,7 +89,7 @@ export function PeopleCarousel({
 									color: $("jam-text-primary"),
 									letterSpacing: $("letter-spacing-extra-wide"),
 									textTransform: "uppercase",
-							}}
+								}}
 							>
 								{person.name}
 							</strong>
@@ -100,7 +100,7 @@ export function PeopleCarousel({
 										fontSize: $("font-size-sm"),
 										letterSpacing: $("letter-spacing-ultra-wide"),
 										textTransform: "uppercase",
-								}}
+									}}
 								>
 									{caption}
 								</span>

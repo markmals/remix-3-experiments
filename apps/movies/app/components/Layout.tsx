@@ -22,27 +22,27 @@ export function Layout({
 				overflowY: "visible",
 			}}
 		>
-		<div
-			aria-hidden="true"
-			css={{
-				position: "absolute",
-				inset: 0,
-				overflow: "hidden",
-				pointerEvents: "none",
-				zIndex: $("jam-z-background"),
-			}}
-		>
 			<div
+				aria-hidden="true"
 				css={{
 					position: "absolute",
-					inset: $("jam-aurora-inset"),
-					background: $("jam-background-aurora"),
-					filter: `blur(${ $("jam-blur-xxl") })`,
-					opacity: $("jam-opacity-strong"),
-					transform: "translate3d(0, 0, 0)",
+					inset: 0,
+					overflow: "hidden",
+					pointerEvents: "none",
+					zIndex: $("jam-z-background"),
 				}}
-			/>
-		</div>
+			>
+				<div
+					css={{
+						position: "absolute",
+						inset: $("jam-aurora-inset"),
+						background: $("jam-background-aurora"),
+						filter: `blur(${$("jam-blur-xxl")})`,
+						opacity: $("jam-opacity-strong"),
+						transform: "translate3d(0, 0, 0)",
+					}}
+				/>
+			</div>
 			<Nav currentUrl={currentUrl} />
 			<main
 				css={{

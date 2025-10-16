@@ -1,11 +1,11 @@
-import type { MovieCardProps } from "~/components/MovieCard.tsx";
-import { MovieCard } from "~/components/MovieCard.tsx";
+import type { PersonCardProps } from "~/components/PersonCard.tsx";
+import { PersonCard } from "~/components/PersonCard.tsx";
 import { cssvar as $ } from "~/utils/css-var.ts";
 
-type MovieShowcaseProps = {
+type PeopleShowcaseProps = {
 	title: string;
 	label: string;
-	movies: MovieCardProps["movie"][];
+	people: PersonCardProps["person"][];
 };
 
 const sectionStyle = {
@@ -49,9 +49,9 @@ const gridStyle = {
 	gridTemplateColumns: `repeat(auto-fit, minmax(${$("spacing-56")}, 1fr))`,
 };
 
-export function MovieShowcase({ title, label, movies }: MovieShowcaseProps) {
+export function PeopleShowcase({ title, label, people }: PeopleShowcaseProps) {
 	return (
-		<section class="popular-movies" css={sectionStyle}>
+		<section class="popular-people" css={sectionStyle}>
 			<div css={headerStyle}>
 				<span>{title}</span>
 				<div css={flourishStyle}>
@@ -60,8 +60,8 @@ export function MovieShowcase({ title, label, movies }: MovieShowcaseProps) {
 				</div>
 			</div>
 			<div css={gridStyle}>
-				{movies.map((movie) => (
-					<MovieCard key={movie.id} movie={movie} />
+				{people.map((person) => (
+					<PersonCard key={person.id} person={person} />
 				))}
 			</div>
 		</section>
