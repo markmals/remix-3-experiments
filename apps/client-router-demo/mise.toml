@@ -12,12 +12,12 @@ run = "pnpm install"
 
 [tasks.dev]
 description = "Run the development server"
-depends = "install"
+depends = [":install", "//packages/remix-client-router:build"]
 run = "vite dev --host"
 
 [tasks.build]
 description = "Build the app"
-depends = "install"
+depends = [":install", "//packages/remix-client-router:build"]
 sources = [
   "../../pnpm-lock.yaml",
   "vite.config.ts",
@@ -29,7 +29,7 @@ run = "vite build"
 
 [tasks.preview]
 description = "Preview the built application"
-depends = "build"
+depends = ":build"
 run = "vite preview"
 
 [tasks.fmt]
@@ -42,7 +42,7 @@ run = "biome lint --write --unsafe --assist-enabled=true ."
 
 [tasks.fix]
 description = "Format and lint the entire project"
-depends = ["fmt", "lint"]
+depends = [":fmt", ":lint"]
 
 [tasks.typecheck]
 description = "Typecheck the entire project"

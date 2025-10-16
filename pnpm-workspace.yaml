@@ -16,9 +16,11 @@ catalogs:
         "@remix-run/headers": latest
         "@remix-run/lazy-file": latest
         "@remix-run/node-fetch-server": latest
+        "@remix-run/route-pattern": latest
     dev:
         "@types/node": ^24.6.0
         vite: npm:rolldown-vite@latest
+        tsdown: ^0.15.7
         nitro: latest
         openapi-typescript: ^7.10.0
     tools:

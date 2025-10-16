@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "postinstall": "mise run postinstall"
+        "postinstall": "mise run :postinstall"
     },
     "dependencies": {
         "@remix-run/dom": "catalog:remix",

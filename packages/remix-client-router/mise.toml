@@ -10,29 +10,17 @@ description = "Install dependencies"
 sources = ["package.json"]
 run = "pnpm install"
 
-[tasks.dev]
-description = "Run the development server"
-depends = [":install"]
-run = "vite dev --host"
-
 [tasks.build]
 description = "Build the app"
-depends = [":install"]
+depends = ":install"
 sources = [
   "../../pnpm-lock.yaml",
-  "nitro.config.ts",
-  "vite.config.ts",
+  "tsdown.config.ts",
   "tsconfig.json",
-  "entry.server.ts",
-  "app/**/*.{ts,tsx,css}",
+  "src/**/*.ts",
 ]
-outputs = [".output"]
-run = "vite build"
-
-[tasks.preview]
-description = "Preview the built application"
-depends = ":build"
-run = "vite preview"
+outputs = ["dist"]
+run = "tsdown"
 
 [tasks.fmt]
 description = "Format the entire project"
@@ -48,16 +36,5 @@ depends = [":fmt", ":lint"]
 
 [tasks.typecheck]
 description = "Typecheck the entire project"
-# sources = ["app/**/*.{ts,tsx}"]
-depends = ":generate-*"
 run = "tsgo --noEmit"
 
-[tasks.postinstall]
-description = "Generate types after npm package installation"
-run = """
-  if [ -z \"$GITHUB_ACTIONS\" ]; then
-    mise run :generate-*
-  else
-    echo '✅ Skipping typegen in CI'
-  fi
-"""
