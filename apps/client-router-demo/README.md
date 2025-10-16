@@ -6,5 +6,5 @@ To start the development server, [install Mise](https://mise.jdx.dev/installing-
 
 ```sh
 mise install
-mise run dev
+mise run :dev
 ```
