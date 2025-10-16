@@ -1,6 +1,6 @@
 import type { ClientRouteHandlers } from "../router/types.ts";
 import { Counter } from "./components/Counter.tsx";
-import { getPost, getPosts } from "./lib/posts.ts";
+import { createPost, getPost, getPosts } from "./lib/posts.ts";
 import { routes } from "./routes.ts";
 
 export const handlers = {
@@ -16,8 +16,8 @@ export const handlers = {
 		return <h1>Hi! I'm Mark.</h1>;
 	},
 	blog: {
-		async index() {
-			const posts = await getPosts();
+		async index({ storage }) {
+			const posts = await getPosts(storage);
 
 			return (
 				<>
@@ -25,7 +25,7 @@ export const handlers = {
 					<ul>
 						{posts.map((post) => (
 							<li>
-								<a href={routes.blog.show.href({ id: post.id })}>
+								<a href={routes.blog.show.href({ id: post.id.toString() })}>
 									{post.title}
 								</a>
 							</li>
@@ -37,8 +37,8 @@ export const handlers = {
 				</>
 			);
 		},
-		async show({ params }) {
-			const { title, content } = await getPost(Number(params.id));
+		async show({ params, storage }) {
+			const { title, content } = await getPost(Number(params.id), storage);
 
 			return (
 				<>
@@ -75,23 +75,27 @@ export const handlers = {
 				</>
 			);
 		},
-		async create({ formData }) {
+		async create({ formData, storage }) {
 			// TypeScript knows formData is available because the route method is POST!
 			// No guard needed - formData is guaranteed to exist!
 			const title = formData.get("title") as string;
 			const content = formData.get("content") as string;
 
-			// In a real app, you'd save this to a database
-			console.log("Creating post:", { title, content });
+			// Create and persist the post using AppStorage
+			const newPost = await createPost(title, content, storage);
+			console.log("Created post:", newPost);
 
-			// Redirect back to blog index
-			// For now, just show a success message
+			// Show success message with link to view the new post
 			return (
 				<>
 					<h1>Post Created!</h1>
-					<p>Title: {title}</p>
-					<p>Content: {content}</p>
+					<p>Title: {newPost.title}</p>
+					<p>Content: {newPost.content}</p>
 					<p>
+						<a href={routes.blog.show.href({ id: newPost.id.toString() })}>
+							View Post
+						</a>
+						{" | "}
 						<a href={routes.blog.index.href()}>Back to Blog</a>
 					</p>
 				</>

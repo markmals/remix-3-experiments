@@ -71,9 +71,6 @@ importers:
       '@remix-run/fetch-router':
         specifier: catalog:remix
         version: 0.6.0
-      '@remix-run/route-pattern':
-        specifier: ^0.14.0
-        version: 0.14.0
       '@remix-run/style':
         specifier: catalog:remix
         version: 0.0.0-experimental-remix-jam.5
