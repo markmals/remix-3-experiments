@@ -309,7 +309,7 @@ export class Router extends EventTarget {
                     // Decode URL parameters
                     const decodedParams: Record<string, string> = {};
                     for (const [key, value] of Object.entries(matchResult.params)) {
-                        decodedParams[key] = decodeURIComponent(value);
+                        decodedParams[key] = decodeURIComponent(String(value));
                     }
 
                     return {

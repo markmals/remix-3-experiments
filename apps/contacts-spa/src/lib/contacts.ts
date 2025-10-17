@@ -311,8 +311,16 @@ export async function deleteContact(id: string) {
 		twitter: "@jenseng",
 	},
 ].forEach((contact) => {
+	// Create a slug-friendly ID by removing special chars and replacing spaces with dashes
+	const slugify = (text: string) =>
+		text
+			.toLowerCase()
+			.replace(/[^\w\s-]/g, "") // Remove special characters except spaces and dashes
+			.replace(/\s+/g, "-") // Replace spaces with dashes
+			.replace(/-+/g, "-"); // Replace multiple dashes with single dash
+
 	fakeContacts.create({
 		...contact,
-		id: `${contact.first.toLowerCase()}-${contact.last.toLocaleLowerCase()}`,
+		id: `${slugify(contact.first)}-${slugify(contact.last)}`,
 	});
 });
