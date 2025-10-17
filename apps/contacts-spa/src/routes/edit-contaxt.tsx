@@ -1,7 +1,7 @@
 import type { InferRouteHandler } from "@remix-run/fetch-router";
+import { render } from "remix-client-router";
 import { CancelButton } from "~/components/CancelButton.tsx";
 import { CONTACTS_KEY, getContacts } from "~/lib/contacts.ts";
-import { render } from "~/lib/render.tsx";
 import { routes } from "~/routes/mod";
 
 export const edit: InferRouteHandler<typeof routes.contact.edit> = async ({
@@ -15,7 +15,7 @@ export const edit: InferRouteHandler<typeof routes.contact.edit> = async ({
 
 	const contact = contacts.find((c) => c.id === params.contactId)!;
 
-	return await render(
+	return render(
 		<form
 			id="contact-form"
 			method="post"

@@ -1,6 +1,6 @@
 import type { InferRouteHandler } from "@remix-run/fetch-router";
+import { render } from "remix-client-router";
 import { CONTACTS_KEY, getContacts } from "~/lib/contacts.ts";
-import { render } from "~/lib/render.tsx";
 import type { routes } from "~/routes/mod";
 
 export const index: InferRouteHandler<typeof routes.index> = async ({
@@ -11,7 +11,7 @@ export const index: InferRouteHandler<typeof routes.index> = async ({
 	const contacts = await getContacts(query);
 	storage.set(CONTACTS_KEY, contacts);
 
-	return await render(
+	return render(
 		<p id="index-page">
 			This is a demo for Remix.
 			<br />

@@ -1,8 +1,8 @@
 import type { InferRouteHandler } from "@remix-run/fetch-router";
+import { render } from "remix-client-router";
 import { DeleteButton } from "~/components/DeleteButton.tsx";
 import { Favorite } from "~/components/Favorite.tsx";
 import { CONTACTS_KEY, getContacts } from "~/lib/contacts.ts";
-import { render } from "~/lib/render.tsx";
 import { routes } from "~/routes/mod";
 
 export const show: InferRouteHandler<typeof routes.contact.show> = async ({
@@ -17,7 +17,7 @@ export const show: InferRouteHandler<typeof routes.contact.show> = async ({
 	const contact = contacts.find((c) => c.id === params.contactId)!;
 	const hasAvatar = !!contact.avatar;
 
-	return await render(
+	return render(
 		<div id="contact">
 			<div>
 				<img

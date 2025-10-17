@@ -132,7 +132,6 @@ export class Router extends EventTarget {
     });
 
     #handleSubmit = doc.submit(event => {
-
         // Don't handle if preventDefault was already called or propagation was stopped
         if (event.defaultPrevented || event.cancelBubble) {
             return;
@@ -364,24 +363,25 @@ export class Router extends EventTarget {
 
         // If the result is a Response, handle it
         if (result instanceof Response) {
-            const response = result as Response & { _element?: Remix.RemixElement };
-
             // Handle redirects
-            if (response.status >= 300 && response.status < 400) {
-                const location = response.headers.get("Location");
+            if (result.status >= 300 && result.status < 400) {
+                const location = result.headers.get("Location");
                 if (location) {
                     // Throw a special redirect error that will be caught in #goto
-                    throw { redirect: location, replace: response.status === 303 || response.status === 307 };
+                    throw {
+                        redirect: location,
+                        replace: result.status === 303 || result.status === 307,
+                    };
                 }
             }
 
             // Handle responses with _element (from render())
-            if (response._element) {
-                return response._element;
+            if (result._element) {
+                return result._element;
             }
 
             // Handle JSON responses - just return current outlet unchanged
-            const contentType = response.headers.get("Content-Type");
+            const contentType = result.headers.get("Content-Type");
             if (contentType?.includes("application/json")) {
                 // For JSON responses, keep the current outlet
                 return this.#outlet;
