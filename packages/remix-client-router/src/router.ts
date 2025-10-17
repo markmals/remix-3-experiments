@@ -306,8 +306,14 @@ export class Router extends EventTarget {
             if (methodMatches) {
                 const matchResult = route.pattern.match({ pathname });
                 if (matchResult) {
+                    // Decode URL parameters
+                    const decodedParams: Record<string, string> = {};
+                    for (const [key, value] of Object.entries(matchResult.params)) {
+                        decodedParams[key] = decodeURIComponent(value);
+                    }
+
                     return {
-                        params: matchResult.params,
+                        params: decodedParams,
                         handler: route.handler,
                     };
                 }
