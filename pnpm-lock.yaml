@@ -94,6 +94,43 @@ importers:
         specifier: npm:rolldown-vite@latest
         version: rolldown-vite@7.1.17(@types/node@24.7.2)(esbuild@0.25.10)(jiti@2.6.1)
 
+  apps/contacts-spa:
+    dependencies:
+      '@remix-run/dom':
+        specifier: catalog:remix
+        version: 0.0.0-experimental-remix-jam.6
+      '@remix-run/events':
+        specifier: catalog:remix
+        version: 0.0.0-experimental-remix-jam.5
+      '@remix-run/fetch-router':
+        specifier: catalog:remix
+        version: 0.6.0
+      '@remix-run/style':
+        specifier: catalog:remix
+        version: 0.0.0-experimental-remix-jam.5
+      '@std/assert':
+        specifier: jsr:^1.0.15
+        version: '@jsr/std__assert@1.0.15'
+      match-sorter:
+        specifier: ^8.1.0
+        version: 8.1.0
+      remix-client-router:
+        specifier: workspace:*
+        version: link:../../packages/remix-client-router
+      sort-by:
+        specifier: ^1.2.0
+        version: 1.2.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: catalog:tools
+        version: 2.2.6
+      '@typescript/native-preview':
+        specifier: catalog:tools
+        version: 7.0.0-dev.20251016.1
+      vite:
+        specifier: npm:rolldown-vite@latest
+        version: rolldown-vite@7.1.17(@types/node@24.7.2)(esbuild@0.25.10)(jiti@2.6.1)
+
   apps/movies:
     dependencies:
       '@remix-run/dom':
@@ -193,6 +230,10 @@ packages:
     resolution: {integrity: sha512-yZbBqeM6TkpP9du/I2pUZnJsRMGGvOuIrhjzC1AwHwW+6he4mni6Bp/m8ijn0iOuZuPI2BfkCoSRunpyjnrQKg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  '@babel/runtime@7.28.4':
+    resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/types@7.28.4':
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
@@ -428,6 +469,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@jsr/std__assert@1.0.15':
+    resolution: {integrity: sha512-iaekOy2yP8hMA5pN5PHMXic4MH0pRggviqTvPd4iEMkS66lDOFTV0uxDRwRc3ia4btRB39QiSUXJPpVZCQu8nA==, tarball: https://npm.jsr.io/~/11/@jsr/std__assert/1.0.15.tgz}
 
   '@jsr/std__internal@1.0.12':
     resolution: {integrity: sha512-6xReMW9p+paJgqoFRpOE2nogJFvzPfaLHLIlyADYjKMUcwDyjKZxryIbgcU+gxiTygn8yCjld1HoI0ET4/iZeA==, tarball: https://npm.jsr.io/~/11/@jsr/std__internal/1.0.12.tgz}
@@ -1001,6 +1045,9 @@ packages:
   magic-string@0.30.19:
     resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
 
+  match-sorter@8.1.0:
+    resolution: {integrity: sha512-0HX3BHPixkbECX+Vt7nS1vJ6P2twPgGTU3PMXjWrl1eyVCL24tFHeyYN1FN5RKLzve0TyzNI9qntqQGbebnfPQ==}
+
   minimatch@5.1.6:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
@@ -1038,6 +1085,10 @@ packages:
 
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
+
+  object-path@0.6.0:
+    resolution: {integrity: sha512-fxrwsCFi3/p+LeLOAwo/wyRMODZxdGBtUlWRzsEpsUVrisZbEfZ21arxLGfaWfcnqb8oHPNihIb4XPE8CQPN5A==}
+    engines: {node: '>=0.8.0'}
 
   ofetch@1.4.1:
     resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
@@ -1085,6 +1136,9 @@ packages:
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
+
+  remove-accents@0.5.0:
+    resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
 
   rendu@0.0.6:
     resolution: {integrity: sha512-nZ512Dw0MxKiIYfCVv8DPe6ig4m0Qt3FOYBJEXrammjIYBBPuHaudc0AGfYx+iyOw2q0itAtPywiVZXtTFCsig==}
@@ -1173,6 +1227,9 @@ packages:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
     hasBin: true
+
+  sort-by@1.2.0:
+    resolution: {integrity: sha512-aRyW65r3xMnf4nxJRluCg0H/woJpksU1dQxRtXYzau30sNBOmf5HACpDd9MZDhKh7ALQ5FgSOfMPwZEtUmMqcg==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -1356,6 +1413,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.28.4
 
+  '@babel/runtime@7.28.4': {}
+
   '@babel/types@7.28.4':
     dependencies:
       '@babel/helper-string-parser': 7.27.1
@@ -1503,6 +1562,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@jsr/std__assert@1.0.15':
+    dependencies:
+      '@jsr/std__internal': 1.0.12
 
   '@jsr/std__internal@1.0.12': {}
 
@@ -1932,6 +1995,11 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  match-sorter@8.1.0:
+    dependencies:
+      '@babel/runtime': 7.28.4
+      remove-accents: 0.5.0
+
   minimatch@5.1.6:
     dependencies:
       brace-expansion: 2.0.2
@@ -1996,6 +2064,8 @@ snapshots:
 
   node-fetch-native@1.6.7: {}
 
+  object-path@0.6.0: {}
+
   ofetch@1.4.1:
     dependencies:
       destr: 2.0.5
@@ -2043,6 +2113,8 @@ snapshots:
   quansync@0.2.11: {}
 
   readdirp@4.1.2: {}
+
+  remove-accents@0.5.0: {}
 
   rendu@0.0.6:
     dependencies:
@@ -2139,6 +2211,10 @@ snapshots:
   rou3@0.7.7: {}
 
   semver@7.7.3: {}
+
+  sort-by@1.2.0:
+    dependencies:
+      object-path: 0.6.0
 
   source-map-js@1.2.1: {}
 

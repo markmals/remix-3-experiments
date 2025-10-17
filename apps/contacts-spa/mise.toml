@@ -13,19 +13,24 @@ run = "pnpm install"
 [tasks.dev]
 description = "Run the development server"
 depends = [":install"]
-run = "tsdown --watch"
+run = ["vite dev --host"]
 
 [tasks.build]
 description = "Build the app"
-depends = ":install"
+depends = [":install", "//packages/remix-client-router:build"]
 sources = [
   "../../pnpm-lock.yaml",
-  "tsdown.config.ts",
+  "vite.config.ts",
   "tsconfig.json",
-  "src/**/*.ts",
+  "app/**/*.{ts,tsx,css}",
 ]
-outputs = ["dist"]
-run = "tsdown"
+outputs = [".output"]
+run = "vite build"
+
+[tasks.preview]
+description = "Preview the built application"
+depends = ":build"
+run = "vite preview"
 
 [tasks.fmt]
 description = "Format the entire project"

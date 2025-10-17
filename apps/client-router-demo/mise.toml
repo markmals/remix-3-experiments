@@ -12,7 +12,7 @@ run = "pnpm install"
 
 [tasks.dev]
 description = "Run the development server"
-depends = [":install", "//packages/remix-client-router:build"]
+depends = [":install", "//packages/remix-client-router:dev"]
 run = "vite dev --host"
 
 [tasks.build]
