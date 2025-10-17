@@ -1,24 +1,14 @@
-import type { Remix } from "@remix-run/dom";
+import { connect, type Remix } from "@remix-run/dom";
 import { dom, events } from "@remix-run/events";
 import { Router } from "remix-client-router";
 import { App } from "~/app.tsx";
-import { ValueObserver } from "~/lib/value-observer.ts";
 
 export function SearchBar(this: Remix.Handle, props: { query?: string }) {
-	const observer = new ValueObserver(props.query);
-	events(observer, [
-		observer.change(
-			(event) => {
-				props.query = event.detail;
-				document.querySelector<HTMLInputElement>("#q")!.value =
-					event.detail ?? "";
-			},
-			{ signal: this.signal },
-		),
-	]);
-
 	const router = this.context.get(App);
 	events(router, [Router.update(() => this.update(), { signal: this.signal })]);
+
+	let previousQuery = props.query;
+	let input: HTMLInputElement;
 
 	const searching = () =>
 		Boolean(router.navigating.to.url?.searchParams.has("q"));
@@ -40,7 +30,11 @@ export function SearchBar(this: Remix.Handle, props: { query?: string }) {
 	});
 
 	return ({ query }: { query?: string }) => {
-		observer.next(query);
+		if (query !== previousQuery) {
+			previousQuery = query;
+			if (input) input.value = query ?? "";
+		}
+
 		return (
 			<form id="search-form" method="get">
 				<input
@@ -49,7 +43,7 @@ export function SearchBar(this: Remix.Handle, props: { query?: string }) {
 					defaultValue={query}
 					id="q"
 					name="q"
-					on={handleInput}
+					on={[handleInput, connect((event) => (input = event.currentTarget))]}
 					placeholder="Search"
 					type="search"
 				/>

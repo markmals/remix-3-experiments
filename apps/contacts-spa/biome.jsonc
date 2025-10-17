@@ -33,7 +33,8 @@
 				"noDuplicateProperties": "error",
 				"noIrregularWhitespace": "error",
 				"noTemplateCurlyInString": "warn",
-				"noArrayIndexKey": "off"
+				"noArrayIndexKey": "off",
+				"noAssignInExpressions": "off"
 			},
 			"complexity": {
 				"noBannedTypes": "warn",
