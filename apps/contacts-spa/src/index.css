@@ -241,7 +241,6 @@ i {
 }
 
 #sidebar nav a.pending {
-	color: hsl(224, 98%, 58%);
 	animation: progress 2s infinite ease-in-out;
 	animation-delay: 200ms;
 }

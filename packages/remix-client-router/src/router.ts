@@ -132,6 +132,12 @@ export class Router extends EventTarget {
     });
 
     #handleSubmit = doc.submit(event => {
+
+        // Don't handle if preventDefault was already called or propagation was stopped
+        if (event.defaultPrevented || event.cancelBubble) {
+            return;
+        }
+
         const form = event.target as HTMLFormElement;
 
         // Check if form has target or external action
@@ -168,7 +174,8 @@ export class Router extends EventTarget {
             formData?: FormData;
             json?: JsonValue;
             text?: string;
-        }
+        },
+        options?: { navigate?: boolean }
     ): Promise<void> {
         // Parse the pathname
         const url = new URL(pathname, window.location.origin);
@@ -253,8 +260,10 @@ export class Router extends EventTarget {
             // Check if this is a redirect
             if (error && typeof error === "object" && "redirect" in error) {
                 const redirectError = error as { redirect: string; replace: boolean };
-                // Perform the redirect navigation
-                await this.navigate(redirectError.redirect, { replace: redirectError.replace });
+                // Only perform redirect navigation if navigate is not false
+                if (options?.navigate !== false) {
+                    await this.navigate(redirectError.redirect, { replace: redirectError.replace });
+                }
                 return;
             }
 
@@ -552,14 +561,18 @@ export class Router extends EventTarget {
         }
 
         // Perform submission
-        await this.#goto(formAction, {
-            formMethod,
+        await this.#goto(
             formAction,
-            formEncType,
-            formData,
-            json,
-            text,
-        });
+            {
+                formMethod,
+                formAction,
+                formEncType,
+                formData,
+                json,
+                text,
+            },
+            { navigate: options.navigate }
+        );
     }
 
     /**

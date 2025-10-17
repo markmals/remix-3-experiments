@@ -4,18 +4,21 @@ import { Details } from "./components/Details.tsx";
 import { SearchBar } from "./components/SearchBar.tsx";
 import { Sidebar } from "./components/Sidebar.tsx";
 import { CONTACTS_KEY, getContacts } from "./lib/contacts.ts";
-import { create, destroy, favorite, update } from "./routes/api.ts";
+import { create, destroy, favorite, update } from "./routes/actions.ts";
 import { edit } from "./routes/edit-contaxt.tsx";
 import { index } from "./routes/index.tsx";
 import { routes } from "./routes/mod.ts";
 import { show } from "./routes/show-contact.tsx";
 
 const router = new Router();
+
+// Pages
 router.map(routes.index, index);
 router.map(routes.contact.show, show);
 router.map(routes.contact.edit, edit);
-router.map(routes.contact.update, update);
 
+// Actions
+router.map(routes.contact.update, update);
 router.map(routes.contact.create, create);
 router.map(routes.contact.destroy, destroy);
 router.map(routes.contact.favorite, favorite);

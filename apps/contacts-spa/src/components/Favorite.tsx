@@ -1,40 +1,48 @@
 import type { Remix } from "@remix-run/dom";
-import { dom } from "@remix-run/events";
 import { App } from "~/app.tsx";
+import { optimistic } from "~/lib/omtimistic.ts";
 import { routes } from "~/routes/mod";
 
-export type FavoriteProps = { favorite: boolean; id: string };
-
-export function Favorite(this: Remix.Handle) {
+export function Favorite(
+	this: Remix.Handle,
+	props: { favorite: boolean; id: string },
+) {
 	const router = this.context.get(App);
 	let optimisticFavorite: boolean | null = null;
+	let currentContactId = props.id;
 
-	return (props: FavoriteProps) => {
+	return (props: { favorite: boolean; id: string }) => {
+		// Reset optimistic state if contact changed
+		if (currentContactId !== props.id) {
+			optimisticFavorite = null;
+			currentContactId = props.id;
+		}
+
 		const favorite =
 			optimisticFavorite !== null ? optimisticFavorite : props.favorite;
+
+		const formAction = routes.contact.favorite.href({ contactId: props.id });
 
 		return (
 			<form
 				method="post"
-				action={routes.contact.favorite.href({ contactId: props.id })}
-				on={dom.submit(async (event) => {
-					event.preventDefault();
-					event.stopPropagation();
+				action={formAction}
+				on={optimistic({
+					action: async (formData: FormData) =>
+						await router.submit(formData, {
+							action: routes.contact.favorite.href({
+								contactId: currentContactId,
+							}),
+							method: "PUT",
+						}),
+					update: ({ detail: formData }) => {
+						optimisticFavorite = formData
+							? formData?.get("favorite") === "true"
+							: null;
 
-					const formData = new FormData(event.currentTarget, event.submitter);
-					optimisticFavorite = formData.get("favorite") === "true";
-					this.update();
-
-					// Submit to the favorite handler without navigating
-					await router.submit(formData, {
-						action: routes.contact.favorite.href({ contactId: props.id }),
-						method: "PUT",
-						navigate: false,
-					});
-					if (this.signal.aborted) return;
-
-					optimisticFavorite = null;
-					this.update();
+						this.update();
+					},
+					signal: this.signal,
 				})}
 			>
 				<input type="hidden" name="_method" value="PUT" />

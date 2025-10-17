@@ -1,8 +1,4 @@
-import {
-	type InferRouteHandler,
-	json,
-	redirect,
-} from "@remix-run/fetch-router";
+import { type InferRouteHandler, redirect } from "@remix-run/fetch-router";
 import {
 	createEmptyContact,
 	deleteContact,
