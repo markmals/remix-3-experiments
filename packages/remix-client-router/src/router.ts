@@ -1,12 +1,21 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: needed for type coercion */
 import type { Remix } from "@remix-run/dom";
-import { createEventType, doc, events, win } from "@remix-run/events";
+import {
+    createEventType,
+    createInteraction,
+    doc,
+    dom,
+    events,
+    win,
+    type EventHandler,
+} from "@remix-run/events";
 import { AppStorage, type RouteMap } from "@remix-run/fetch-router";
 import type {
     ClientRouteHandlers,
     FormEncType,
     FormMethod,
     GetClientRouteContext,
+    HTMLFormMethod,
     JsonValue,
     MutationClientRouteContext,
     NavigateOptions,
@@ -629,6 +638,38 @@ export class Router extends EventTarget {
             return pendingPath === "/";
         }
         return pendingPath === pathname || pendingPath.startsWith(`${pathname}/`);
+    }
+
+    optimistic(
+        handler: EventHandler<CustomEvent<FormData | null>, HTMLFormElement>,
+        { signal }: { signal?: AbortSignal }
+    ) {
+        const optimisticUpdates = createInteraction<HTMLFormElement, FormData | null>(
+            "rmx:optimistic",
+            ({ target, dispatch }) => {
+                return events(target, [
+                    dom.submit(async event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.stopImmediatePropagation();
+
+                        const formData = new FormData(event.currentTarget, event.submitter);
+                        dispatch({ detail: formData });
+
+                        await this.submit(formData, {
+                            action: event.currentTarget.action,
+                            method: (formData.get("rmx-method") ??
+                                event.currentTarget.method) as HTMLFormMethod,
+                        });
+                        if (signal?.aborted) return;
+
+                        dispatch({ detail: null });
+                    }),
+                ]);
+            }
+        );
+
+        return optimisticUpdates(handler);
     }
 
     #resolveTo(to: To): string {

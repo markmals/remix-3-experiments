@@ -1,6 +1,5 @@
 import type { Remix } from "@remix-run/dom";
 import { App } from "~/app.tsx";
-import { optimistic } from "~/lib/omtimistic.ts";
 import { routes } from "~/routes/mod";
 
 export function Favorite(
@@ -21,31 +20,22 @@ export function Favorite(
 		const favorite =
 			optimisticFavorite !== null ? optimisticFavorite : props.favorite;
 
-		const formAction = routes.contact.favorite.href({ contactId: props.id });
-
 		return (
 			<form
-				method="post"
-				action={formAction}
-				on={optimistic({
-					action: async (formData: FormData) =>
-						await router.submit(formData, {
-							action: routes.contact.favorite.href({
-								contactId: currentContactId,
-							}),
-							method: "PUT",
-						}),
-					update: ({ detail: formData }) => {
-						optimisticFavorite = formData
-							? formData?.get("favorite") === "true"
+				method="POST"
+				action={routes.contact.favorite.href({ contactId: props.id })}
+				on={router.optimistic(
+					(event) => {
+						optimisticFavorite = event.detail
+							? event.detail?.get("favorite") === "true"
 							: null;
 
 						this.update();
 					},
-					signal: this.signal,
-				})}
+					{ signal: this.signal },
+				)}
 			>
-				<input type="hidden" name="_method" value="PUT" />
+				<input type="hidden" name="rmx-method" value="PUT" />
 				<button
 					aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
 					name="favorite"
