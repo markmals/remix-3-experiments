@@ -25,7 +25,6 @@ import type {
     SubmitOptions,
     SubmitTarget,
     To,
-    UpperCaseFormMethod,
 } from "./types.ts";
 
 const [update, createUpdate] = createEventType("rmx-router:update");
@@ -374,7 +373,7 @@ export class Router extends EventTarget {
             text?: string;
         }
     ): Promise<Remix.RemixNode> {
-        const method = (submission?.formMethod || "GET") as UpperCaseFormMethod;
+        const method = (submission?.formMethod || "GET") as FormMethod;
 
         // Build context based on method type
         let result: Remix.RemixNode | Response;

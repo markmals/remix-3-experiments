@@ -12,11 +12,12 @@ export function Sidebar(this: Remix.Handle) {
 	const contacts = () => router.storage.get(CONTACTS_KEY) || [];
 
 	return () => {
+		const c = contacts();
 		return (
 			<nav>
-				{contacts().length ? (
+				{c.length ? (
 					<ul>
-						{contacts().map((contact) => (
+						{c.map((contact) => (
 							<SidebarItem key={contact.id} contact={contact} />
 						))}
 					</ul>
