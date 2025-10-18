@@ -2,7 +2,10 @@ import type { Remix } from "@remix-run/dom";
 import type { AppStorage, Route, RouteMap } from "@remix-run/fetch-router";
 import type { Params } from "@remix-run/route-pattern";
 
+/** Supported HTTP methods in lowercase form for HTML form submissions. */
 export type LowerCaseFormMethod = "get" | "post" | "put" | "patch" | "delete";
+
+/** Uppercase variant of the supported HTML form methods. */
 export type UpperCaseFormMethod = Uppercase<LowerCaseFormMethod>;
 /**
  * Users can specify either lowercase or uppercase form methods on `<Form>`,
@@ -14,20 +17,26 @@ export type HTMLFormMethod = LowerCaseFormMethod | UpperCaseFormMethod;
  * RouterState. This is to align with the normalization done via fetch().
  */
 export type FormMethod = UpperCaseFormMethod;
+/** Encoding types the router can submit when handling form submissions. */
 export type FormEncType =
 	| "application/x-www-form-urlencoded"
 	| "multipart/form-data"
 	| "application/json"
 	| "text/plain";
+/** JSON object shape compatible with browser structured cloning. */
 export type JsonObject = {
 	[Key in string]: JsonValue;
 } & {
 	[Key in string]?: JsonValue | undefined;
 };
+/** JSON array shape compatible with browser structured cloning. */
 export type JsonArray = JsonValue[] | readonly JsonValue[];
+/** Primitive values permitted inside JSON payloads. */
 export type JsonPrimitive = string | number | boolean | null;
+/** Any JSON-compatible value accepted by the router submit helpers. */
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 
+/** Discriminated union describing the payload of a form or data submission. */
 export type Submission =
 	| {
 			formMethod: FormMethod;
@@ -54,6 +63,7 @@ export type Submission =
 			text: string;
 	  };
 
+/** Fine-grained navigation states the router can report. */
 export type NavigationStates = {
 	Idle: {
 		state: "idle";
@@ -89,9 +99,12 @@ export type NavigationStates = {
 		text: Submission["text"];
 	};
 };
+/** Union of all navigation states exposed via {@link Navigating}. */
 export type Navigation = NavigationStates[keyof NavigationStates];
 
+/** Strategy used when resolving relative navigation or submission targets. */
 export type RelativeRoutingType = "route" | "path";
+/** Options accepted by {@link import("./router.ts").Router.navigate | Router.navigate}. */
 export interface NavigateOptions {
 	/** Replace the current entry in the history stack instead of pushing a new one */
 	replace?: boolean;
@@ -105,6 +118,7 @@ export interface NavigateOptions {
 	viewTransition?: boolean;
 }
 
+/** Parsed representation of a URL used by the router helpers. */
 export interface Path {
 	/**
 	 * A URL pathname, beginning with a /.
@@ -119,8 +133,10 @@ export interface Path {
 	 */
 	hash: string;
 }
+/** Accepted destination values for {@link import("./router.ts").Router.navigate | Router.navigate}. */
 export type To = number | string | URL | Partial<Path>;
 
+/** All values that {@link import("./router.ts").Router.submit | Router.submit} accepts as a submission source. */
 export type SubmitTarget =
 	| HTMLFormElement
 	| HTMLButtonElement
@@ -129,6 +145,7 @@ export type SubmitTarget =
 	| URLSearchParams
 	| JsonValue
 	| null;
+/** Options for configuring {@link import("./router.ts").Router.submit | Router.submit}. */
 export interface SubmitOptions {
 	/**
 	 * The HTTP method used to submit the form. Overrides `<form method>`.
@@ -176,6 +193,7 @@ export interface SubmitOptions {
 	viewTransition?: boolean;
 }
 
+/** Pair of navigation states describing where the router is coming from and going to. */
 export type Navigating = {
 	to: Navigation;
 	from: Navigation;

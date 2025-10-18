@@ -33,7 +33,18 @@ const [update, createUpdate] = createEventType("rmx-router:update");
 // Cache the origin since it can't change
 const origin = window.location.origin || `${window.location.protocol}//${window.location.host}`;
 
+/**
+ * Client-side router that mirrors the `@remix-run/fetch-router` API for Remix 3 apps.
+ *
+ * The router listens for link clicks and form submissions, resolves them against the registered
+ * route map, and updates the active outlet. Consumers can observe navigation state by listening
+ * to {@link Router.update} events or by reading the exposed getters.
+ */
 export class Router extends EventTarget {
+    /**
+     * Type-safe custom event that fires whenever the router updates its internal state.
+     * Consumers can listen to `Router.update` on a router instance to trigger UI refreshes.
+     */
     static update = update;
 
     #location: Location;
@@ -42,24 +53,43 @@ export class Router extends EventTarget {
     #routes: Map<string, { pattern: any; method: string; handler: any }> = new Map();
     #storage: AppStorage;
 
+    /**
+     * Latest resolved browser location after the most recent successful navigation.
+     * Mirrors `window.location`, but only updates once the router finishes loading.
+     */
     get location(): Location {
         return this.#location;
     }
 
+    /**
+     * Current navigation status, including the route being left and the route being entered.
+     * This is useful for rendering loading indicators or optimistic UI.
+     */
     get navigating(): Navigating {
         return this.#navigating;
     }
 
+    /**
+     * The latest rendered Remix node returned by the matched route handler.
+     * Consumers can mount this node inside their application's root.
+     */
     get outlet(): Remix.RemixNode {
         return this.#outlet;
     }
 
+    /**
+     * Per-request storage shared across route handlers during navigation.
+     * Mirrors {@link AppStorage} from the server router.
+     */
     get storage(): AppStorage {
         return this.#storage;
     }
 
     #started = false;
 
+    /**
+     * Creates a new client router, wiring up window history listeners and form/click interception.
+     */
     constructor() {
         super();
 
@@ -406,8 +436,12 @@ export class Router extends EventTarget {
     }
 
     /**
-     * Map routes to handlers, similar to @remix-run/fetch-router
-     * Supports both single route and nested route map patterns
+     * Map routes to handlers, similar to `@remix-run/fetch-router`.
+     *
+     * Supports both single route objects as well as nested route maps produced by {@link route}.
+     *
+     * @param routes - Route definition or route map to register.
+     * @param handlers - JSX-producing handlers that align with the route structure.
      */
     map<T extends RouteMap>(routes: T, handlers: ClientRouteHandlers<T>): void;
     map(route: any, handler: any): void;
@@ -492,6 +526,15 @@ export class Router extends EventTarget {
         }
     }
 
+    /**
+     * Programmatically navigate to a new location.
+     *
+     * This updates browser history, resolves the target against registered routes, and updates
+     * the outlet with the resulting Remix node.
+     *
+     * @param to - Target location (string, URL, or partial path object).
+     * @param options - Navigation behavior overrides such as history replacement.
+     */
     async navigate(to: To, options: NavigateOptions = {}): Promise<void> {
         const pathname = this.#resolveTo(to);
 
@@ -506,6 +549,15 @@ export class Router extends EventTarget {
         await this.#goto(pathname);
     }
 
+    /**
+     * Submit form data or arbitrary payloads to the router.
+     *
+     * The submission resolves against the registered mutation handler, updates navigation state,
+     * and optionally triggers a browser navigation depending on the submission options.
+     *
+     * @param target - Form element, data object, or payload to submit.
+     * @param options - Submission options such as method, encType, or navigation behavior.
+     */
     async submit(target: SubmitTarget, options: SubmitOptions = {}): Promise<void> {
         let formData: FormData | undefined;
         let json: JsonValue | undefined;
@@ -640,6 +692,16 @@ export class Router extends EventTarget {
         return pendingPath === pathname || pendingPath.startsWith(`${pathname}/`);
     }
 
+    /**
+     * Wrap a form submission handler to emit optimistic updates while the mutation is pending.
+     *
+     * The returned handler dispatches `rmx:optimistic` events with the submitted {@link FormData}
+     * before delegating to {@link Router.submit}, and clears the optimistic state once the
+     * submission completes.
+     *
+     * @param handler - Event handler invoked with optimistic payload events.
+     * @param options - Optional abort signal to cancel optimistic updates.
+     */
     optimistic(
         handler: EventHandler<CustomEvent<FormData | null>, HTMLFormElement>,
         { signal }: { signal?: AbortSignal }
