@@ -128,11 +128,14 @@ function FilmsList({
 
 // Async generator component that demonstrates imperative async/await
 // This is the superpower: you can await and yield to control loading states naturally!
-const CharacterDisplay = component<SearchProps>(async function* (props) {
+// Note: `this.props` is an async iterator for props, and `this` provides Remix.Handle properties
+// You can check `this.props.current` to see if props have changed during async operations
+const CharacterDisplay = component<SearchProps>(async function* () {
     // Cache character data so we don't re-fetch when just toggling loadFilms
     const characterCache = new Map<number, Character>();
 
-    for await (const { characterId, loadFilms } of props) {
+    // `this.props` can be used as an async iterator for props
+    for await (const { characterId, loadFilms } of this.props) {
         // Check if we have this character cached
         let character: Character;
 
@@ -142,13 +145,18 @@ const CharacterDisplay = component<SearchProps>(async function* (props) {
             // Show loading state while fetching character
             yield <LoadingMessage message={`Loading character ${characterId}...`} />;
 
-            // Imperatively await the fetch!
-            const characterResponse = await fetch(`https://swapi.dev/api/people/${characterId}/`);
+            // Imperatively await the fetch! (using this.signal for abort support)
+            const characterResponse = await fetch(`https://swapi.dev/api/people/${characterId}/`, {
+                signal: this.signal,
+            });
+            if (this.props.current.characterId !== characterId) continue;
             character = await characterResponse.json();
 
             // Cache it for next time
             characterCache.set(characterId, character);
         }
+
+        if (this.props.current.characterId !== characterId) continue;
 
         if (!loadFilms) {
             // Just show the character without films
@@ -172,32 +180,26 @@ const CharacterDisplay = component<SearchProps>(async function* (props) {
             // Imperatively await film fetches in sequence!
             const films: Film[] = [];
             for (const filmUrl of character.films) {
-                const filmResponse = await fetch(filmUrl);
+                const filmResponse = await fetch(filmUrl, { signal: this.signal });
+                if (this.props.current.characterId !== characterId) break;
+
                 const film: Film = await filmResponse.json();
+                if (this.props.current.characterId !== characterId) break;
+
                 films.push(film);
 
                 // Yield progress updates as each film loads!
+                const isComplete = films.length === character.films.length;
                 yield (
                     <CharacterCard character={character}>
                         <FilmsList
                             films={films}
-                            isComplete={false}
+                            isComplete={isComplete}
                             totalFilms={character.films.length}
                         />
                     </CharacterCard>
                 );
             }
-
-            // Final render with all films loaded
-            yield (
-                <CharacterCard character={character}>
-                    <FilmsList
-                        films={films}
-                        isComplete={true}
-                        totalFilms={character.films.length}
-                    />
-                </CharacterCard>
-            );
         }
     }
 });

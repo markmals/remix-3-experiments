@@ -6,9 +6,14 @@ type Dispatcher<Value> = (value: Value) => void;
 export class Store<Value> {
     #value: Value;
     #listeners = new Set<Dispatcher<Value>>();
+    #version = 0; // Track how many times value has changed
 
     get current(): Value {
         return this.#value;
+    }
+
+    get version(): number {
+        return this.#version;
     }
 
     constructor(value: Value) {
@@ -20,6 +25,7 @@ export class Store<Value> {
 
         if (!equals(this.#value, update)) {
             this.#value = { ...this.#value, ...value };
+            this.#version++; // Increment version on every change
 
             // Notify all listeners about the change
             for (const dispatch of this.#listeners) {
@@ -30,19 +36,34 @@ export class Store<Value> {
 
     async *[Symbol.asyncIterator](): AsyncGenerator<Value> {
         // Yield the current value
+        let lastYieldedVersion = this.#version;
         yield this.#value;
 
         // Then yield whenever the value changes
         while (true) {
-            const { promise: value, resolve } = Promise.withResolvers<Value>();
+            // If version changed while we were processing, yield immediately
+            if (this.#version !== lastYieldedVersion) {
+                lastYieldedVersion = this.#version;
+                yield this.#value;
+                continue;
+            }
+
+            // Otherwise wait for the next change
+            const { promise, resolve } = Promise.withResolvers<{
+                value: Value;
+                version: number;
+            }>();
 
             const dispatch = (newValue: Value) => {
                 this.#listeners.delete(dispatch);
-                resolve(newValue);
+                const versionAtResolve = this.#version;
+                resolve({ value: newValue, version: versionAtResolve });
             };
             this.#listeners.add(dispatch);
 
-            yield await value;
+            const { value, version } = await promise;
+            yield value;
+            lastYieldedVersion = version;
         }
     }
 }
@@ -83,15 +104,29 @@ export async function* combineLatest<T extends unknown[]>(
     }
 }
 
+export interface AsyncHandle<Props> extends Remix.Handle {
+    /** Access to the props store for checking current values */
+    readonly props: Store<Props>;
+}
+
 export function component<Props = Remix.ElementProps>(
-    setup: (props: AsyncIterable<Props>) => AsyncGenerator<Remix.RemixNode>,
+    setup: (this: AsyncHandle<Props>) => AsyncGenerator<Remix.RemixNode>,
 ): Remix.Component<Remix.NoContext, Props, Props> {
     return function (this: Remix.Handle, setupProps: Props) {
         let node: Remix.RemixNode;
         const props = new Store(setupProps);
 
+        const combinedThis = Object.create(this) as AsyncHandle<Props>;
+
+        // Expose the props store directly
+        Object.defineProperty(combinedThis, "props", {
+            get() {
+                return props;
+            },
+        });
+
         (async () => {
-            for await (const template of setup(props)) {
+            for await (const template of setup.call(combinedThis)) {
                 node = template;
                 this.update();
             }
