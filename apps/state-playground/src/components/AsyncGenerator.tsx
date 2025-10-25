@@ -1,189 +1,212 @@
 import type { Remix } from "@remix-run/dom";
 import { dom } from "@remix-run/events";
-import { combineLatest, component, Store } from "~/lib/async.ts";
+import { component } from "~/lib/async.ts";
 
-interface Item {
+interface Character {
     id: number;
     name: string;
-    category: "fruit" | "vegetable" | "other";
+    height: string;
+    mass: string;
+    birth_year: string;
+    films: string[];
 }
 
-interface FilterProps {
-    filterText: string;
-    category: string;
+interface Film {
+    title: string;
+    episode_id: number;
+    director: string;
+    release_date: string;
 }
 
-interface ItemState {
-    items: Item[];
-    lastAdded: number | null;
+interface SearchProps {
+    characterId: number;
+    loadFilms: boolean;
 }
 
-class ItemStore extends Store<ItemState> {
-    addItem(name: string, category: Item["category"]) {
-        const newId = Math.max(0, ...this.current.items.map((item: Item) => item.id)) + 1;
-        this.next({
-            items: [...this.current.items, { id: newId, name, category }],
-            lastAdded: newId,
-        });
-    }
-
-    removeItem(id: number) {
-        this.next({
-            items: this.current.items.filter((item: Item) => item.id !== id),
-        });
-    }
+// Stateless component for loading states
+function LoadingMessage({ message }: { message: string }) {
+    return (
+        <character-display>
+            <div css={{ padding: "10px", fontStyle: "italic", color: "#666" }}>{message}</div>
+        </character-display>
+    );
 }
 
-// TODO: Component decorator
-// @component()
-// async function *ItemDisplay(this: Component.Handle<FilterProps>) {
-// 	const store = new ItemStore({
-// 		items: [
-// 			{ id: 1, name: "Apple", category: "fruit" },
-// 			{ id: 2, name: "Banana", category: "fruit" },
-// 			{ id: 3, name: "Carrot", category: "vegetable" },
-// 			{ id: 4, name: "Date", category: "fruit" },
-// 			{ id: 5, name: "Egg", category: "other" },
-// 		],
-// 		lastAdded: null,
-// 	});
-
-// 		// Demonstrate loading state on initial render
-// 	yield <div>Loading...</div>;
-// 	await new Promise((r) => setTimeout(r, 500));
-
-// 	const state = combineLatest(this, store);
-
-// 	for await (const [{ filterText, category }, { items }] of state) {
-// 		yield <div>{items.map(item => <>{item.name}</>)}</div>
-// 	}
-// }
-
-const ItemDisplay = component<FilterProps>(async function* (props) {
-    const categories = ["fruit", "vegetable", "other"] satisfies Item["category"][];
-
-    const store = new ItemStore({
-        items: [
-            { id: 1, name: "Apple", category: "fruit" },
-            { id: 2, name: "Banana", category: "fruit" },
-            { id: 3, name: "Carrot", category: "vegetable" },
-            { id: 4, name: "Date", category: "fruit" },
-            { id: 5, name: "Egg", category: "other" },
-        ],
-        lastAdded: null,
-    });
-
-    // Demonstrate loading state on initial render
-    yield <div>Loading...</div>;
-    await new Promise(r => setTimeout(r, 500));
-
-    const state = combineLatest(props, store);
-
-    for await (const [{ filterText, category }, { items }] of state) {
-        // yield <div>Processing...</div>;
-        // await new Promise((r) => setTimeout(r, 1000));
-
-        const filteredItems = items.filter(item => {
-            const matchesText =
-                !filterText || item.name.toLowerCase().includes(filterText.toLowerCase());
-            const matchesCategory = !category || item.category === category;
-            return matchesText && matchesCategory;
-        });
-
-        const totalCount = items.length;
-        const filteredCount = filteredItems.length;
-
-        yield (
-            <item-display>
-                <div css={{ marginBottom: "20px" }}>
-                    <h4>Add Item:</h4>
-                    <form
-                        on={dom.submit(event => {
-                            event.preventDefault();
-                            const form = event.currentTarget;
-                            const formData = new FormData(form);
-                            const name = formData.get("name") as string;
-                            const category = formData.get("category") as Item["category"];
-                            if (name && category) {
-                                store.addItem(name, category);
-                                form.reset();
-                            }
-                        })}
-                    >
-                        <input
-                            css={{ marginRight: "8px", padding: "4px" }}
-                            name="name"
-                            placeholder="Item name"
-                            type="text"
-                        />
-                        <select css={{ marginRight: "8px", padding: "4px" }} name="category">
-                            {categories.map(cat => (
-                                <option key={cat} value={cat}>
-                                    {cat}
-                                </option>
-                            ))}
-                        </select>
-                        <button type="submit">Add</button>
-                    </form>
+// Stateless component for the character card
+function CharacterCard({
+    character,
+    children,
+}: {
+    character: Character;
+    children?: Remix.RemixNode;
+}) {
+    return (
+        <character-display>
+            <div
+                css={{
+                    padding: "15px",
+                    backgroundColor: "#f0f8ff",
+                    borderRadius: "8px",
+                    marginBottom: "10px",
+                }}
+            >
+                <h3 css={{ marginTop: 0, color: "#2c3e50" }}>{character.name}</h3>
+                <div css={{ marginBottom: "8px" }}>
+                    <strong>Height:</strong> {character.height}cm
                 </div>
+                <div css={{ marginBottom: "8px" }}>
+                    <strong>Mass:</strong> {character.mass}kg
+                </div>
+                <div css={{ marginBottom: "8px" }}>
+                    <strong>Birth Year:</strong> {character.birth_year}
+                </div>
+                {children}
+            </div>
+        </character-display>
+    );
+}
 
+// Stateless component for the films section
+function FilmsList({
+    films,
+    totalFilms,
+    isComplete = false,
+}: {
+    films: Film[];
+    totalFilms: number;
+    isComplete?: boolean;
+}) {
+    const sortedFilms = films.toSorted((a, b) => a.episode_id - b.episode_id);
+
+    return (
+        <div css={{ marginTop: "15px" }}>
+            <h4
+                css={{
+                    marginBottom: "10px",
+                    color: isComplete ? "#27ae60" : "#2c3e50",
+                }}
+            >
+                Films{" "}
+                {isComplete
+                    ? `(All ${films.length} Loaded)`
+                    : `(Loaded ${films.length} of ${totalFilms})`}
+                :
+            </h4>
+            <ul css={{ margin: 0, paddingLeft: "20px" }}>
+                {sortedFilms.map(film => (
+                    <li css={{ marginBottom: "8px" }} key={film.episode_id}>
+                        <strong>Episode {film.episode_id}:</strong> {film.title} (
+                        {film.release_date})
+                        {isComplete && (
+                            <div
+                                css={{
+                                    fontSize: "0.9em",
+                                    color: "#666",
+                                    marginTop: "2px",
+                                }}
+                            >
+                                Directed by {film.director}
+                            </div>
+                        )}
+                    </li>
+                ))}
+            </ul>
+            {!isComplete && (
                 <div
                     css={{
-                        marginBottom: "20px",
-                        padding: "10px",
-                        backgroundColor: "#f5f5f5",
-                        borderRadius: "4px",
+                        marginTop: "10px",
+                        fontStyle: "italic",
+                        color: "#666",
                     }}
                 >
-                    <h4>Statistics:</h4>
-                    <div>Total items: {totalCount}</div>
-                    <div>Filtered items: {filteredCount}</div>
-                    <div>Categories: {categories.join(", ")}</div>
+                    Loading more...
                 </div>
+            )}
+        </div>
+    );
+}
 
-                <div>
-                    <h4>Filtered Items:</h4>
-                    {filteredItems.length === 0 ? (
-                        <p>No items match the current filters</p>
-                    ) : (
-                        <ul>
-                            {filteredItems.map(item => (
-                                <li
-                                    css={{
-                                        marginBottom: "8px",
-                                        padding: "8px",
-                                        backgroundColor: "white",
-                                        border: "1px solid #ddd",
-                                        borderRadius: "4px",
-                                    }}
-                                    key={item.id}
-                                >
-                                    <strong>{item.name}</strong> ({item.category})
-                                    <button
-                                        css={{
-                                            marginLeft: "10px",
-                                            padding: "2px 8px",
-                                            fontSize: "12px",
-                                        }}
-                                        on={dom.click(() => store.removeItem(item.id))}
-                                        type="button"
-                                    >
-                                        Remove
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-            </item-display>
-        );
+// Async generator component that demonstrates imperative async/await
+// This is the superpower: you can await and yield to control loading states naturally!
+const CharacterDisplay = component<SearchProps>(async function* (props) {
+    // Cache character data so we don't re-fetch when just toggling loadFilms
+    const characterCache = new Map<number, Character>();
+
+    for await (const { characterId, loadFilms } of props) {
+        // Check if we have this character cached
+        let character: Character;
+
+        if (characterCache.has(characterId)) {
+            character = characterCache.get(characterId)!;
+        } else {
+            // Show loading state while fetching character
+            yield <LoadingMessage message={`Loading character ${characterId}...`} />;
+
+            // Imperatively await the fetch!
+            const characterResponse = await fetch(`https://swapi.dev/api/people/${characterId}/`);
+            character = await characterResponse.json();
+
+            // Cache it for next time
+            characterCache.set(characterId, character);
+        }
+
+        if (!loadFilms) {
+            // Just show the character without films
+            yield (
+                <CharacterCard character={character}>
+                    <div css={{ fontStyle: "italic", color: "#666", marginTop: "10px" }}>
+                        Enable "Load Films" to see more details
+                    </div>
+                </CharacterCard>
+            );
+        } else {
+            // Show character with a loading state for films
+            yield (
+                <CharacterCard character={character}>
+                    <div css={{ marginTop: "15px", fontStyle: "italic", color: "#666" }}>
+                        Loading films ({character.films.length})...
+                    </div>
+                </CharacterCard>
+            );
+
+            // Imperatively await film fetches in sequence!
+            const films: Film[] = [];
+            for (const filmUrl of character.films) {
+                const filmResponse = await fetch(filmUrl);
+                const film: Film = await filmResponse.json();
+                films.push(film);
+
+                // Yield progress updates as each film loads!
+                yield (
+                    <CharacterCard character={character}>
+                        <FilmsList
+                            films={films}
+                            isComplete={false}
+                            totalFilms={character.films.length}
+                        />
+                    </CharacterCard>
+                );
+            }
+
+            // Final render with all films loaded
+            yield (
+                <CharacterCard character={character}>
+                    <FilmsList
+                        films={films}
+                        isComplete={true}
+                        totalFilms={character.films.length}
+                    />
+                </CharacterCard>
+            );
+        }
     }
 });
 
 // Parent component that controls the props
+// Demonstrates how props flow into async generator components
 export function AsyncGeneratorExample(this: Remix.Handle) {
-    let filterText = "";
-    let category = "";
+    let characterId = 1;
+    let loadFilms = false;
 
     return () => (
         <async-generator-example
@@ -201,56 +224,66 @@ export function AsyncGeneratorExample(this: Remix.Handle) {
                     border: "2px solid #4a9eff",
                 }}
             >
-                <div css={{ marginBottom: "10px" }}>
-                    <label css={{ display: "block", marginBottom: "4px" }} for="filter-text">
-                        <strong>Filter Text:</strong>
+                <h2 css={{ marginTop: 0 }}>Async Generator Component Demo</h2>
+                <p css={{ color: "#666", marginBottom: "20px" }}>
+                    Watch how the component yields different UI states as it imperatively awaits
+                    async operations. Change the controls to see it in action!
+                </p>
+
+                <div css={{ marginBottom: "15px" }}>
+                    <label css={{ display: "block", marginBottom: "8px" }} for="character-id">
+                        <strong>Character ID (1-10):</strong>
                     </label>
                     <input
                         css={{
                             width: "100%",
-                            padding: "8px",
-                            fontSize: "14px",
+                            padding: "10px",
+                            fontSize: "16px",
                             borderRadius: "4px",
                             border: "1px solid #ccc",
                         }}
-                        id="filter-text"
+                        id="character-id"
+                        max="10"
+                        min="1"
                         on={dom.input(event => {
-                            filterText = event.currentTarget.value;
-                            this.update();
+                            const value = parseInt(event.currentTarget.value);
+                            if (value >= 1 && value <= 10) {
+                                characterId = value;
+                                this.update();
+                            }
                         })}
-                        placeholder="Filter by name..."
-                        type="text"
-                        value={filterText}
+                        type="number"
+                        value={characterId}
                     />
                 </div>
-                <div>
-                    <label css={{ display: "block", marginBottom: "4px" }} for="filter-category">
-                        <strong>Filter Category:</strong>
-                    </label>
-                    <select
+
+                <div css={{ marginBottom: "10px" }}>
+                    <label
                         css={{
-                            width: "100%",
-                            padding: "8px",
-                            fontSize: "14px",
-                            borderRadius: "4px",
-                            border: "1px solid #ccc",
+                            display: "flex",
+                            alignItems: "center",
+                            cursor: "pointer",
+                            userSelect: "none",
                         }}
-                        id="filter-category"
-                        on={dom.change(event => {
-                            category = event.currentTarget.value;
-                            this.update();
-                        })}
-                        value={category}
                     >
-                        <option value="">All Categories</option>
-                        <option value="fruit">Fruit</option>
-                        <option value="vegetable">Vegetable</option>
-                        <option value="other">Other</option>
-                    </select>
+                        <input
+                            checked={loadFilms}
+                            css={{ marginRight: "8px" }}
+                            on={dom.change(event => {
+                                loadFilms = event.currentTarget.checked;
+                                this.update();
+                            })}
+                            type="checkbox"
+                        />
+                        <strong>Load Films (watch progress updates!)</strong>
+                    </label>
+                    <div css={{ marginLeft: "28px", fontSize: "0.9em", color: "#666" }}>
+                        When enabled, the component will yield UI updates after each film loads
+                    </div>
                 </div>
             </div>
 
-            <ItemDisplay category={category} filterText={filterText} />
+            <CharacterDisplay characterId={characterId} loadFilms={loadFilms} />
         </async-generator-example>
     );
 }
