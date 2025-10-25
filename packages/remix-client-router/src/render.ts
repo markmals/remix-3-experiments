@@ -1,6 +1,4 @@
 import type { Remix } from "@remix-run/dom";
-import { renderToStream } from "@remix-run/dom/server";
-import { html } from "@remix-run/fetch-router";
 
 declare global {
     interface Response {
@@ -16,7 +14,7 @@ declare global {
  * @returns Response containing the rendered stream and the captured element.
  */
 export function render(element: Remix.RemixElement, init?: ResponseInit) {
-    const response = html(renderToStream(element), init);
+    const response = new Response(null, init);
     response._element = element;
     return response;
 }

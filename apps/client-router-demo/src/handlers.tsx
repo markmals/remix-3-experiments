@@ -1,11 +1,12 @@
-import type { ClientRouteHandlers } from "remix-client-router";
+import { render } from "remix-client-router";
 import { Counter } from "./components/Counter.tsx";
 import { createPost, getPost, getPosts } from "./lib/posts.ts";
 import { routes } from "./routes.ts";
+import type { RouteHandlers } from "@remix-run/fetch-router";
 
 export const handlers = {
     async index() {
-        return (
+        return render(
             <div>
                 <h1>Hello, World!</h1>
                 <Counter />
@@ -19,7 +20,7 @@ export const handlers = {
         async index({ storage }) {
             const posts = await getPosts(storage);
 
-            return (
+            return render(
                 <>
                     <h1>Blog</h1>
                     <ul>
@@ -40,7 +41,7 @@ export const handlers = {
         async show({ params, storage }) {
             const { title, content } = await getPost(Number(params.id), storage);
 
-            return (
+            return render(
                 <>
                     <h1>{title}</h1>
                     <p>{content}</p>
@@ -51,7 +52,7 @@ export const handlers = {
             );
         },
         async new() {
-            return (
+            return render(
                 <>
                     <h1>Create New Post</h1>
                     <form method="POST" action={routes.blog.create.href()}>
@@ -86,7 +87,7 @@ export const handlers = {
             console.log("Created post:", newPost);
 
             // Show success message with link to view the new post
-            return (
+            return render(
                 <>
                     <h1>Post Created!</h1>
                     <p>Title: {newPost.title}</p>
@@ -100,4 +101,4 @@ export const handlers = {
             );
         },
     },
-} satisfies ClientRouteHandlers<typeof routes>;
+} satisfies RouteHandlers<typeof routes>;

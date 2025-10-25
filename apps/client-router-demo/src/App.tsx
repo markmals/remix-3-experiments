@@ -5,8 +5,6 @@ import { Layout } from "./components/Layout.tsx";
 import { handlers } from "./handlers.tsx";
 import { routes } from "./routes.ts";
 
-type AppRouter = Router<typeof routes>;
-
 // Main content that subscribes to router
 function MainContent(this: Remix.Handle) {
     const router = this.context.get(App);
@@ -18,8 +16,9 @@ function MainContent(this: Remix.Handle) {
     };
 }
 
-export function App(this: Remix.Handle<AppRouter>) {
-    const router = new Router(routes, handlers);
+export function App(this: Remix.Handle<Router>) {
+    const router = new Router();
+    router.map(routes, handlers);
     this.context.set(router);
 
     // Don't subscribe to updates here - let child components do it
