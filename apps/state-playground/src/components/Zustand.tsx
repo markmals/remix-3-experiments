@@ -1,6 +1,40 @@
 import type { Remix } from "@remix-run/dom";
 import { doc, dom, events } from "@remix-run/events";
-import { useStarWarsStore } from "~/lib/zustand.ts";
+import { store } from "~/lib/zustand.ts";
+
+export interface Character {
+	id: number;
+	name: string;
+}
+
+export const useStarWarsStore = store({
+	state: {
+		characters: [] as Character[],
+		selectedCharacter: null as number | null,
+		isLoading: false,
+	},
+	getters: {
+		get sortedCharacters(): Character[] {
+			return this.characters.toSorted((lhs, rhs) => rhs.id - lhs.id);
+		},
+	},
+	actions: {
+		selectCharacter(character: Character | null): void {
+			this.selectedCharacter = character?.id ?? null;
+		},
+		async fetchCharacter(id: number): Promise<void> {
+			this.isLoading = true;
+			const { name } = await fetch(`https://swapi.dev/api/people/${id}/`).then(
+				(r) => r.json(),
+			);
+			this.isLoading = false;
+			this.characters = [
+				...this.characters.filter((c: Character) => c.id !== id),
+				{ id, name },
+			];
+		},
+	},
+});
 
 // const store = useStarWarsStore();
 // events(store, [

@@ -6,7 +6,7 @@
  * const useCounterStore = store({
  *   state: {
  *     count: 0,
- *     name: 'Eduardo'
+ *     name: 'Mark'
  *   },
  *   getters: {
  *     get doubleCount(): number {
@@ -241,37 +241,3 @@ export function store<
 // 	target: Target;
 // 	currentTarget: CurrentTarget;
 // };
-
-export interface Character {
-	id: number;
-	name: string;
-}
-
-export const useStarWarsStore = store({
-	state: {
-		characters: [] as Character[],
-		selectedCharacter: null as number | null,
-		isLoading: false,
-	},
-	getters: {
-		get sortedCharacters(): Character[] {
-			return this.characters.toSorted((lhs, rhs) => rhs.id - lhs.id);
-		},
-	},
-	actions: {
-		selectCharacter(character: Character | null) {
-			this.selectedCharacter = character?.id ?? null;
-		},
-		async fetchCharacter(id: number) {
-			this.isLoading = true;
-			const { name } = await fetch(`https://swapi.dev/api/people/${id}/`).then(
-				(r) => r.json(),
-			);
-			this.isLoading = false;
-			this.characters = [
-				...this.characters.filter((c: Character) => c.id !== id),
-				{ id, name },
-			];
-		},
-	},
-});

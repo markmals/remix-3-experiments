@@ -35,6 +35,31 @@ class ItemStore extends AsyncStore<ItemState> {
 	}
 }
 
+// TODO: Component decorator
+// @component()
+// async function *ItemDisplay(this: Component.Handle<FilterProps>) {
+// 	const store = new ItemStore({
+// 		items: [
+// 			{ id: 1, name: "Apple", category: "fruit" },
+// 			{ id: 2, name: "Banana", category: "fruit" },
+// 			{ id: 3, name: "Carrot", category: "vegetable" },
+// 			{ id: 4, name: "Date", category: "fruit" },
+// 			{ id: 5, name: "Egg", category: "other" },
+// 		],
+// 		lastAdded: null,
+// 	});
+
+// 		// Demonstrate loading state on initial render
+// 	yield <div>Loading...</div>;
+// 	await new Promise((r) => setTimeout(r, 500));
+
+// 	const state = combineLatest(this, store);
+
+// 	for await (const [{ filterText, category }, { items }] of state) {
+// 		yield <div>{items.map(item => <>{item.name}</>)}</div>
+// 	}
+// }
+
 const ItemDisplay = component<FilterProps>(async function* (props) {
 	const categories = [
 		"fruit",
