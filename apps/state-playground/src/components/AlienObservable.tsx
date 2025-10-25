@@ -175,6 +175,94 @@ class TodoStore {
 	}
 }
 
+// @component()
+// class TodoDemo implements Remix.Handle {
+// 	store = new TodoStore();
+
+// 	render() {
+// 		return (
+// 			<div
+// 				css={{
+// 					padding: "24px",
+// 					border: "1px solid #ccc",
+// 					borderRadius: "8px",
+// 				}}
+// 			>
+// 				<h3>Todo List</h3>
+
+// 				<div css={{ marginBottom: "16px" }}>
+// 					<input
+// 						type="text"
+// 						value={this.store.newTodoText}
+// 						placeholder="What needs to be done?"
+// 						on={[
+// 							dom.input((event) => {
+// 								this.store.newTodoText = event.currentTarget.value;
+// 							}),
+// 							dom.keydown((event) => {
+// 								if (event.key === "Enter") {
+// 									this.store.addTodo();
+// 								}
+// 							}),
+// 						]}
+// 						css={{
+// 							padding: "8px",
+// 							fontSize: "16px",
+// 							width: "300px",
+// 							marginRight: "8px",
+// 						}}
+// 					/>
+// 					<button
+// 						type="button"
+// 						on={dom.click(() => this.store.addTodo())}
+// 						css={{
+// 							padding: "8px 16px",
+// 							fontSize: "16px",
+// 							cursor: "pointer",
+// 						}}
+// 					>
+// 						Add
+// 					</button>
+// 				</div>
+
+// 				<div css={{ marginBottom: "16px" }}>
+// 					{this.store.todos.map((todo) => (
+// 						<div
+// 							key={todo.id}
+// 							css={{
+// 								padding: "8px",
+// 								background: todo.completed ? "#e8f5e9" : "#fff",
+// 								borderBottom: "1px solid #eee",
+// 								display: "flex",
+// 								alignItems: "center",
+// 								gap: "8px",
+// 							}}
+// 						>
+// 							<input
+// 								type="checkbox"
+// 								checked={todo.completed}
+// 								on={dom.change(() => todo.toggle())}
+// 							/>
+// 							<span
+// 								css={{
+// 									textDecoration: todo.completed ? "line-through" : "none",
+// 									color: todo.completed ? "#666" : "#000",
+// 								}}
+// 							>
+// 								{todo.text}
+// 							</span>
+// 						</div>
+// 					))}
+// 				</div>
+
+// 				<div css={{ fontSize: "14px", color: "#666" }}>
+// 					{this.store.completedCount} / {this.store.totalCount} completed
+// 				</div>
+// 			</div>
+// 		);
+// 	}
+// }
+
 const TodoDemo = component(() => {
 	const store = new TodoStore();
 
