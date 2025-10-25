@@ -5,20 +5,16 @@ import { AsyncGeneratorExample } from "./components/AsyncGenerator.tsx";
 import { ZustandExample } from "./components/Zustand.tsx";
 
 export function App(this: Remix.Handle) {
-	return () => (
-		<Stack css={{ padding: "2rem" }}>
-			<h1 css={{ fontSize: "32px", fontWeight: 700, marginBottom: "1rem" }}>
-				Zustand
-			</h1>
-			<ZustandExample />
-			<h1 css={{ fontSize: "32px", fontWeight: 700, marginBottom: "1rem" }}>
-				Async Generator
-			</h1>
-			<AsyncGeneratorExample />
-			<h1 css={{ fontSize: "32px", fontWeight: 700, marginBottom: "1rem" }}>
-				Alien Signals
-			</h1>
-			<AlienObservableDemo />
-		</Stack>
-	);
+    return () => (
+        <Stack css={{ padding: "2rem" }}>
+            <h1 css={{ fontSize: "32px", fontWeight: 700, marginBottom: "1rem" }}>Zustand</h1>
+            <ZustandExample />
+            <h1 css={{ fontSize: "32px", fontWeight: 700, marginBottom: "1rem" }}>
+                Async Generator
+            </h1>
+            <AsyncGeneratorExample />
+            <h1 css={{ fontSize: "32px", fontWeight: 700, marginBottom: "1rem" }}>Alien Signals</h1>
+            <AlienObservableDemo />
+        </Stack>
+    );
 }
