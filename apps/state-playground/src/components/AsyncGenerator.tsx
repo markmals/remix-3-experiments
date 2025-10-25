@@ -1,6 +1,6 @@
 import type { Remix } from "@remix-run/dom";
 import { dom } from "@remix-run/events";
-import { AsyncStore, combineLatest, component } from "~/lib/async.ts";
+import { combineLatest, component, Store } from "~/lib/async.ts";
 
 interface Item {
     id: number;
@@ -18,17 +18,17 @@ interface ItemState {
     lastAdded: number | null;
 }
 
-class ItemStore extends AsyncStore<ItemState> {
+class ItemStore extends Store<ItemState> {
     addItem(name: string, category: Item["category"]) {
         const newId = Math.max(0, ...this.current.items.map((item: Item) => item.id)) + 1;
-        this.send({
+        this.next({
             items: [...this.current.items, { id: newId, name, category }],
             lastAdded: newId,
         });
     }
 
     removeItem(id: number) {
-        this.send({
+        this.next({
             items: this.current.items.filter((item: Item) => item.id !== id),
         });
     }
@@ -111,12 +111,12 @@ const ItemDisplay = component<FilterProps>(async function* (props) {
                         })}
                     >
                         <input
-                            type="text"
+                            css={{ marginRight: "8px", padding: "4px" }}
                             name="name"
                             placeholder="Item name"
-                            css={{ marginRight: "8px", padding: "4px" }}
+                            type="text"
                         />
-                        <select name="category" css={{ marginRight: "8px", padding: "4px" }}>
+                        <select css={{ marginRight: "8px", padding: "4px" }} name="category">
                             {categories.map(cat => (
                                 <option key={cat} value={cat}>
                                     {cat}
@@ -149,7 +149,6 @@ const ItemDisplay = component<FilterProps>(async function* (props) {
                         <ul>
                             {filteredItems.map(item => (
                                 <li
-                                    key={item.id}
                                     css={{
                                         marginBottom: "8px",
                                         padding: "8px",
@@ -157,16 +156,17 @@ const ItemDisplay = component<FilterProps>(async function* (props) {
                                         border: "1px solid #ddd",
                                         borderRadius: "4px",
                                     }}
+                                    key={item.id}
                                 >
                                     <strong>{item.name}</strong> ({item.category})
                                     <button
-                                        type="button"
-                                        on={dom.click(() => store.removeItem(item.id))}
                                         css={{
                                             marginLeft: "10px",
                                             padding: "2px 8px",
                                             fontSize: "12px",
                                         }}
+                                        on={dom.click(() => store.removeItem(item.id))}
+                                        type="button"
                                     >
                                         Remove
                                     </button>
@@ -202,18 +202,32 @@ export function AsyncGeneratorExample(this: Remix.Handle) {
                 }}
             >
                 <div css={{ marginBottom: "10px" }}>
-                    <label for="filter-text" css={{ display: "block", marginBottom: "4px" }}>
+                    <label css={{ display: "block", marginBottom: "4px" }} for="filter-text">
                         <strong>Filter Text:</strong>
                     </label>
                     <input
+                        css={{
+                            width: "100%",
+                            padding: "8px",
+                            fontSize: "14px",
+                            borderRadius: "4px",
+                            border: "1px solid #ccc",
+                        }}
                         id="filter-text"
-                        type="text"
-                        value={filterText}
-                        placeholder="Filter by name..."
                         on={dom.input(event => {
                             filterText = event.currentTarget.value;
                             this.update();
                         })}
+                        placeholder="Filter by name..."
+                        type="text"
+                        value={filterText}
+                    />
+                </div>
+                <div>
+                    <label css={{ display: "block", marginBottom: "4px" }} for="filter-category">
+                        <strong>Filter Category:</strong>
+                    </label>
+                    <select
                         css={{
                             width: "100%",
                             padding: "8px",
@@ -221,26 +235,12 @@ export function AsyncGeneratorExample(this: Remix.Handle) {
                             borderRadius: "4px",
                             border: "1px solid #ccc",
                         }}
-                    />
-                </div>
-                <div>
-                    <label for="filter-category" css={{ display: "block", marginBottom: "4px" }}>
-                        <strong>Filter Category:</strong>
-                    </label>
-                    <select
                         id="filter-category"
-                        value={category}
                         on={dom.change(event => {
                             category = event.currentTarget.value;
                             this.update();
                         })}
-                        css={{
-                            width: "100%",
-                            padding: "8px",
-                            fontSize: "14px",
-                            borderRadius: "4px",
-                            border: "1px solid #ccc",
-                        }}
+                        value={category}
                     >
                         <option value="">All Categories</option>
                         <option value="fruit">Fruit</option>
@@ -250,7 +250,7 @@ export function AsyncGeneratorExample(this: Remix.Handle) {
                 </div>
             </div>
 
-            <ItemDisplay filterText={filterText} category={category} />
+            <ItemDisplay category={category} filterText={filterText} />
         </async-generator-example>
     );
 }

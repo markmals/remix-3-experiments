@@ -1,9 +1,9 @@
 import type { Remix } from "@remix-run/dom";
-import equals from "fast-deep-equal";
+import equal from "fast-deep-equal";
 
 type Dispatcher<Value> = (value: Value) => void;
 
-export class AsyncStore<Value> {
+export class Store<Value> {
     #value: Value;
     #listeners = new Set<Dispatcher<Value>>();
 
@@ -15,7 +15,7 @@ export class AsyncStore<Value> {
         this.#value = value;
     }
 
-    send(value: Partial<Value>) {
+    next(value: Partial<Value>, equals = equal) {
         const update = { ...this.#value, ...value };
 
         if (!equals(this.#value, update)) {
@@ -88,7 +88,7 @@ export function component<Props = Remix.ElementProps>(
 ): Remix.Component<Remix.NoContext, Props, Props> {
     return function (this: Remix.Handle, setupProps: Props) {
         let node: Remix.RemixNode;
-        const props = new AsyncStore(setupProps);
+        const props = new Store(setupProps);
 
         (async () => {
             for await (const template of setup(props)) {
@@ -98,7 +98,7 @@ export function component<Props = Remix.ElementProps>(
         })();
 
         return (renderProps: Props) => {
-            props.send(renderProps);
+            props.next(renderProps);
             return node;
         };
     };
