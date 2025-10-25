@@ -1,0 +1,155 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 100
+    },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "asNeeded",
+            "semicolons": "always",
+            "quoteStyle": "double"
+        }
+    },
+    "css": {
+        "formatter": {
+            "quoteStyle": "double"
+        }
+    },
+    "linter": {
+        "enabled": false,
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUnusedImports": "warn",
+                "noUnusedFunctionParameters": "warn",
+                "noUnusedPrivateClassMembers": "warn",
+                "useExhaustiveDependencies": "warn",
+                "useHookAtTopLevel": "error",
+                "noEmptyPattern": "warn",
+                "noUnknownPseudoClass": "error",
+                "noUnknownPseudoElement": "error",
+                "noUnknownTypeSelector": "error",
+                "useImportExtensions": "error"
+            },
+            "suspicious": {
+                "noEmptyInterface": "warn",
+                "noExplicitAny": "warn",
+                "noDocumentCookie": "error",
+                "noDuplicateCustomProperties": "error",
+                "noDuplicateElseIf": "error",
+                "noDuplicateProperties": "error",
+                "noIrregularWhitespace": "error",
+                "noTemplateCurlyInString": "warn",
+                "noArrayIndexKey": "off",
+                "noAssignInExpressions": "off"
+            },
+            "complexity": {
+                "noBannedTypes": "warn",
+                "noUselessEscapeInRegex": "warn",
+                "noUselessStringRaw": "warn"
+            },
+            "nursery": {
+                "useSortedClasses": {
+                    "level": "error",
+                    "options": {
+                        "attributes": ["className"],
+                        "functions": ["cva", "cx", "clsx"]
+                    },
+                    "fix": "safe"
+                }
+            },
+            "a11y": {
+                "noAutofocus": "off"
+            },
+            "performance": {
+                "noBarrelFile": "off",
+                "useTopLevelRegex": "warn"
+            },
+            "style": {
+                "noNamespace": "off",
+                "noNonNullAssertion": "off",
+                "useFragmentSyntax": "warn",
+                "useImportType": "error",
+                "useNodejsImportProtocol": "error",
+                "useConsistentArrayType": {
+                    "level": "warn",
+                    "options": { "syntax": "shorthand" }
+                },
+                "noParameterAssign": "error",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useConst": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error",
+                "noCommonJs": "warn",
+                "noEnum": "error",
+                "noSubstr": "warn",
+                "useAtIndex": "warn",
+                "useCollapsedIf": "warn",
+                "useComponentExportOnlyModules": {
+                    "level": "error",
+                    "options": {
+                        "allowExportNames": [
+                            "loader",
+                            "clientLoader",
+                            "action",
+                            "clientAction",
+                            "ErrorBoundary",
+                            "HydrateFallback",
+                            "headers",
+                            "handle",
+                            "links",
+                            "meta",
+                            "shouldRevalidate"
+                        ]
+                    }
+                },
+                "useConsistentMemberAccessibility": {
+                    "level": "error",
+                    "options": {
+                        "accessibility": "none"
+                    }
+                },
+                "useTrimStartEnd": "error"
+            }
+        }
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "useSortedAttributes": "on",
+                "organizeImports": "on"
+            }
+        }
+    },
+    "overrides": [
+        {
+            "includes": [".vscode/**"],
+            "json": {
+                "parser": {
+                    "allowComments": true,
+                    "allowTrailingCommas": true
+                }
+            }
+        },
+        {
+            "includes": ["**/dist/**", "**/tailwind.css", "**/.react-router/**"],
+            "linter": { "enabled": false },
+            "formatter": { "enabled": false },
+            "assist": { "enabled": false }
+        }
+    ]
+}

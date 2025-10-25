@@ -11,6 +11,7 @@ catalogs:
         "@remix-run/dom": jam
         "@remix-run/events": jam
         "@remix-run/style": jam
+        "@remix-run/library": jam
         "@remix-run/fetch-router": latest
         "@remix-run/file-storage": latest
         "@remix-run/headers": latest

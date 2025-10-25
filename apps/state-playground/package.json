@@ -1,0 +1,23 @@
+{
+	"name": "remix-state-playground",
+	"private": true,
+	"type": "module",
+	"dependencies": {
+		"@remix-run/dom": "catalog:remix",
+		"@remix-run/events": "catalog:remix",
+		"@remix-run/library": "catalog:remix",
+		"alien-signals": "^2.0.7",
+		"fast-deep-equal": "^3.1.3",
+		"iter-ops": "^3.5.0",
+		"rxjs": "^7.8.2",
+		"signal-polyfill": "^0.2.2",
+		"zustand": "^5.0.8"
+	},
+	"devDependencies": {
+		"@babel/plugin-proposal-decorators": "^7.28.0",
+		"@biomejs/biome": "catalog:tools",
+		"@rollup/plugin-babel": "^6.1.0",
+		"@typescript/native-preview": "catalog:tools",
+		"vite": "catalog:dev"
+	}
+}
