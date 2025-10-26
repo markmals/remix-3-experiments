@@ -1,6 +1,8 @@
 import type { Remix } from "@remix-run/dom";
 import { dom } from "@remix-run/events";
-import { component } from "~/lib/async.ts";
+import { press } from "@remix-run/events/press";
+import { Stack } from "@remix-run/library";
+import { component, Store } from "~/lib/async.ts";
 
 interface Character {
     id: number;
@@ -22,6 +24,66 @@ interface SearchProps {
     characterId: number;
     loadFilms: boolean;
 }
+
+function Layout({ children }: { children: Remix.RemixNode }) {
+    return <Stack css={{ gap: "1rem", marginBottom: "1rem", maxWidth: "200px" }}>{children}</Stack>;
+}
+
+function Button({
+    children,
+    outline = false,
+    ...props
+}: Remix.Props<"button"> & { outline?: boolean }) {
+    return (
+        <button
+            css={{
+                borderRadius: "0.5rem",
+                borderColor: "blue",
+                borderWidth: "2px",
+                height: "44px",
+            }}
+            {...props}
+        >
+            {children}
+        </button>
+    );
+}
+
+class Counter extends Store<{ count: number; double: number }> {
+    constructor() {
+        super({ count: 1, double: 2 });
+    }
+
+    increment() {
+        const count = this.current.count + 1;
+        this.next({ count, double: count * 2 });
+    }
+
+    decrement() {
+        const count = this.current.count - 1;
+        this.next({ count, double: count * 2 });
+    }
+}
+
+const Count = component(async function* () {
+    const counter = new Counter();
+
+    for await (const { count, double } of counter) {
+        yield (
+            <Layout>
+                <span>
+                    Double {count} is {double}
+                </span>
+                <Button on={press(() => counter.increment())} outline>
+                    Increment
+                </Button>
+                <Button on={press(() => counter.decrement())} outline>
+                    Decrement
+                </Button>
+            </Layout>
+        );
+    }
+});
 
 // Stateless component for loading states
 function LoadingMessage({ message }: { message: string }) {
@@ -217,6 +279,7 @@ export function AsyncGeneratorExample(this: Remix.Handle) {
                 maxWidth: "800px",
             }}
         >
+            <Count />
             <div
                 css={{
                     marginBottom: "30px",
