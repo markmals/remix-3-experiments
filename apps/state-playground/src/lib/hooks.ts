@@ -1,6 +1,8 @@
 import type { Remix } from "@remix-run/dom";
-import { createEventType, dom, events } from "@remix-run/events";
-import { Suspense, SuspenseState } from "./suspense.tsx";
+import { connect, disconnect } from "@remix-run/dom";
+import type { EventDescriptor } from "@remix-run/events";
+import { bind, createEventType, dom, events } from "@remix-run/events";
+import { Suspense } from "./suspense.tsx";
 
 /**
  * Prevents triggering updates.
@@ -525,60 +527,306 @@ export interface FormStatusPending {
 
 export type FormStatus = FormStatusPending | FormStatusNotPending;
 
-const FORM_STATUS_CONTEXT_KEY = Symbol.for("rmx-form-status");
+const DEFAULT_FORM_STATUS: FormStatusNotPending = {
+    pending: false,
+    data: null,
+    method: null,
+    action: null,
+};
+
+const [formStatusChange, createFormStatusChange] =
+    createEventType<FormStatus>("rmx:form-status:change");
+const [formStatusRegister, createFormStatusRegister] = createEventType<FormStatusState>(
+    "rmx:form-status:register",
+);
+const [formStatusUnregister, createFormStatusUnregister] = createEventType<FormStatusState>(
+    "rmx:form-status:unregister",
+);
+
+export class FormStatusState extends EventTarget {
+    static change = formStatusChange;
+
+    #status: FormStatus = { ...DEFAULT_FORM_STATUS };
+
+    get status(): FormStatus {
+        return this.#status;
+    }
+
+    set status(newValue: FormStatus) {
+        this.#status = newValue.pending ? { ...newValue } : { ...DEFAULT_FORM_STATUS };
+        this.dispatchEvent(createFormStatusChange({ detail: this.#status }));
+    }
+
+    listen(): EventDescriptor<HTMLElement>[] {
+        const registerDescriptor = connect(event => {
+            event.currentTarget.dispatchEvent(
+                createFormStatusRegister({
+                    detail: this,
+                    bubbles: true,
+                    composed: true,
+                }),
+            );
+        });
+
+        const unregisterDescriptor = disconnect(event => {
+            event.currentTarget.dispatchEvent(
+                createFormStatusUnregister({
+                    detail: this,
+                    bubbles: true,
+                    composed: true,
+                }),
+            );
+        });
+
+        return [registerDescriptor, unregisterDescriptor];
+    }
+}
+
+class FormStatusHost {
+    constructor(
+        private options: {
+            controller: FormController;
+            listeners: Map<FormStatusState, number>;
+            currentStatus: FormStatus;
+        },
+    ) {}
+
+    register(state: FormStatusState): void {
+        const count = this.options.listeners.get(state) ?? 0;
+        this.options.listeners.set(state, count + 1);
+        if (count === 0) {
+            state.status = this.options.currentStatus;
+        }
+    }
+
+    unregister(state: FormStatusState): void {
+        const count = this.options.listeners.get(state);
+        if (count === undefined) return;
+        if (count <= 1) {
+            this.options.listeners.delete(state);
+        } else {
+            this.options.listeners.set(state, count - 1);
+        }
+    }
+
+    dispose?(): void {
+        this.options.listeners.clear();
+    }
+
+    handleSubmit?(event: SubmitEvent): void {
+        if (!this.options.controller) return;
+        const formElement = event.currentTarget as HTMLFormElement;
+        const submitter = (event.submitter as HTMLButtonElement | HTMLInputElement | null) ?? null;
+
+        const methodAttr =
+            submitter?.getAttribute("formmethod") ??
+            formElement.getAttribute("method") ??
+            formElement.method ??
+            "";
+        const normalizedMethod = methodAttr ? methodAttr.toUpperCase() : "";
+
+        const actionAttr =
+            submitter?.getAttribute("formaction") ??
+            formElement.getAttribute("action") ??
+            formElement.action ??
+            "";
+
+        const data = new FormData(formElement);
+
+        this.options.controller.pending({
+            data,
+            method: normalizedMethod,
+            action: actionAttr,
+        });
+    }
+}
+
+function createFormStatusHostDescriptor(host: FormStatusHost): EventDescriptor<HTMLFormElement> {
+    return connect((event, signal) => {
+        if (!host) {
+            throw new Error("form.status() requires a host controller");
+        }
+
+        const disposeTarget = events(event.currentTarget, [
+            formStatusRegister(registerEvent => {
+                registerEvent.stopPropagation();
+                const state = registerEvent.detail;
+                if (!state) return;
+                host.register(state);
+            }),
+            formStatusUnregister(unregisterEvent => {
+                unregisterEvent.stopPropagation();
+                const state = unregisterEvent.detail;
+                if (!state) return;
+                host.unregister(state);
+            }),
+            bind<SubmitEvent>(
+                "submit",
+                submitEvent => {
+                    host.handleSubmit?.(submitEvent);
+                },
+                { capture: true },
+            ),
+        ]);
+
+        const disposeSignal = events(signal, [
+            dom.abort(() => {
+                disposeTarget();
+                host.dispose?.();
+                disposeSignal();
+            }),
+        ]);
+    });
+}
+
+export interface FormStatusPendingIntent {
+    data: FormData;
+    method?: string | null;
+    action?: FormStatusPending["action"] | null;
+}
+
+export class FormController {
+    constructor(
+        private options: {
+            host: FormStatusHost;
+            listeners: Map<FormStatusState, number>;
+            currentStatus: FormStatus;
+        },
+    ) {}
+
+    receive = () => createFormStatusHostDescriptor(this.options.host);
+
+    broadcast(status: FormStatus) {
+        this.options.currentStatus =
+            status.pending === false ? { ...DEFAULT_FORM_STATUS } : { ...status };
+
+        for (const listener of this.options.listeners.keys()) {
+            listener.status = this.options.currentStatus;
+        }
+    }
+
+    get status() {
+        return this.options.currentStatus;
+    }
+
+    set status(newValue: FormStatus) {
+        this.broadcast(newValue);
+    }
+
+    pending(intent: FormStatusPendingIntent) {
+        const pendingStatus: FormStatusPending = {
+            pending: true,
+            data: intent.data,
+            method: intent.method ? intent.method.toUpperCase() : "",
+            action:
+                typeof intent.action === "string" || typeof intent.action === "function"
+                    ? intent.action
+                    : "",
+        };
+        this.broadcast(pendingStatus);
+    }
+}
 
 /**
- * Hook to read form submission status. This requires a parent form component
- * to provide form status via context using `createFormStatusStore()`.
+ * Creates a controller for wiring a form element to `useFormStatus`.
  *
  * @example
- * // In parent form:
- * function MyForm(this: Remix.Handle<Store<FormStatus, FormStatus>>) {
- *   const formStatus = createFormStatusStore();
- *   this.context.set(formStatus);
+ * function MyForm(this: Remix.Handle) {
+ *   const form = createForm();
  *
  *   return () => (
- *     <form on={dom.submit(async (e) => {
- *       const formData = new FormData(e.currentTarget);
- *       formStatus.update({ pending: true, data: formData, method: 'POST', action: '/submit' });
- *       await submitForm(formData);
- *       formStatus.update({ pending: false, data: null, method: null, action: null });
- *     })}>
+ *     <form
+ *       on={[
+ *         form.receive(),
+ *         dom.submit(async event => {
+ *           event.preventDefault();
+ *           const formData = new FormData(event.currentTarget);
+ *
+ *           await submitForm(formData);
+ *           form.setStatus({ pending: false, data: null, method: null, action: null });
+ *         }),
+ *       ]}
+ *     >
  *       <SubmitButton />
  *     </form>
  *   );
  * }
+ */
+export function createForm(): FormController {
+    let currentStatus: FormStatus = DEFAULT_FORM_STATUS;
+    const listeners = new Map<FormStatusState, number>();
+    let controller: FormController;
+
+    const host = new FormStatusHost({
+        get controller() {
+            return controller;
+        },
+        get listeners() {
+            return listeners;
+        },
+        get currentStatus() {
+            return currentStatus;
+        },
+    });
+
+    controller = new FormController({
+        get host() {
+            return host;
+        },
+        get listeners() {
+            return listeners;
+        },
+        get currentStatus() {
+            return currentStatus;
+        },
+    });
+
+    return controller;
+}
+
+type FormStatusAccessor = Accessor<FormStatus> & {
+    listen(): EventDescriptor<HTMLElement>[];
+};
+
+/**
+ * Hook to read form submission status within a descendant of a form that calls `createForm()`.
  *
- * // In child component:
+ * Child components should call `status.listen()` on the element that needs status updates so
+ * the parent form can register them.
+ *
+ * @example
  * function SubmitButton(this: Remix.Handle) {
  *   const status = useFormStatus(this);
+ *
  *   return () => (
- *     <button disabled={status().pending}>
- *       {status().pending ? 'Submitting...' : 'Submit'}
+ *     <button on={status.listen()} disabled={status().pending}>
+ *       {status().pending ? "Submitting..." : "Submit"}
  *     </button>
  *   );
  * }
  */
-export function useFormStatus(handle: Remix.Handle): Accessor<FormStatus> {
-    // Try to get form status store from context
-    const store = handle.context.get(FORM_STATUS_CONTEXT_KEY as any) as
-        | Store<FormStatus, FormStatus>
-        | undefined;
+export function useFormStatus(handle: Remix.Handle): FormStatusAccessor {
+    const state = new FormStatusState();
+    let currentStatus: FormStatus = state.status;
 
-    if (store) {
-        return use(handle, store);
-    }
+    const teardownChange = events(state, [
+        FormStatusState.change(event => {
+            currentStatus = event.detail;
+            handle.update();
+        }),
+    ]);
 
-    // Return default not-pending status if no form status store in context
-    return () => ({ pending: false, data: null, method: null, action: null });
-}
+    const teardownAbort = events(handle.signal, [
+        dom.abort(() => {
+            teardownChange();
+            teardownAbort();
+        }),
+    ]);
 
-/**
- * Creates a form status store that can be provided via context to child components.
- * Use this in form components to track submission state.
- */
-export function createFormStatusStore(): Store<FormStatus, FormStatus> {
-    return createStore<FormStatus>({ pending: false, data: null, method: null, action: null });
+    const accessor = (() => currentStatus) as FormStatusAccessor;
+    accessor.listen = () => state.listen();
+
+    return accessor;
 }
 
 let idCounter = 0;
