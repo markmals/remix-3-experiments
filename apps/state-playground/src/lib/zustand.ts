@@ -163,6 +163,7 @@ export function store<
                             handle.update();
                         }
                     }),
+                    { once: true },
                 ),
             ]);
         }

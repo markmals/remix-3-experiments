@@ -285,17 +285,14 @@ export function use(
     if (usable instanceof StoreImpl) {
         let state = usable.getSnapshot();
 
-        const disposeStore = events(usable, [
-            usable.next(event => {
-                state = event.detail;
-                handle.update();
-            }),
-        ]);
-        const disposeAbort = events(handle.signal, [
-            dom.abort(() => {
-                disposeStore();
-                disposeAbort();
-            }),
+        events(usable, [
+            usable.next(
+                event => {
+                    state = event.detail;
+                    handle.update();
+                },
+                { signal: handle.signal },
+            ),
         ]);
 
         return () => state;
@@ -647,34 +644,42 @@ function createFormStatusHostDescriptor(host: FormStatusHost): EventDescriptor<H
             throw new Error("form.status() requires a host controller");
         }
 
-        const disposeTarget = events(event.currentTarget, [
-            formStatusRegister(registerEvent => {
-                registerEvent.stopPropagation();
-                const state = registerEvent.detail;
-                if (!state) return;
-                host.register(state);
-            }),
-            formStatusUnregister(unregisterEvent => {
-                unregisterEvent.stopPropagation();
-                const state = unregisterEvent.detail;
-                if (!state) return;
-                host.unregister(state);
-            }),
+        events(event.currentTarget, [
+            formStatusRegister(
+                registerEvent => {
+                    registerEvent.stopPropagation();
+                    const state = registerEvent.detail;
+                    if (!state) return;
+                    host.register(state);
+                },
+                { signal },
+            ),
+            formStatusUnregister(
+                unregisterEvent => {
+                    unregisterEvent.stopPropagation();
+                    const state = unregisterEvent.detail;
+                    if (!state) return;
+                    host.unregister(state);
+                },
+                { signal },
+            ),
             bind<SubmitEvent>(
                 "submit",
                 submitEvent => {
                     host.handleSubmit?.(submitEvent);
                 },
-                { capture: true },
+                { capture: true, signal },
             ),
         ]);
 
         const disposeSignal = events(signal, [
-            dom.abort(() => {
-                disposeTarget();
-                host.dispose?.();
-                disposeSignal();
-            }),
+            dom.abort(
+                () => {
+                    host.dispose?.();
+                    disposeSignal();
+                },
+                { once: true },
+            ),
         ]);
     });
 }
@@ -809,18 +814,14 @@ export function useFormStatus(handle: Remix.Handle): FormStatusAccessor {
     const state = new FormStatusState();
     let currentStatus: FormStatus = state.status;
 
-    const teardownChange = events(state, [
-        FormStatusState.change(event => {
-            currentStatus = event.detail;
-            handle.update();
-        }),
-    ]);
-
-    const teardownAbort = events(handle.signal, [
-        dom.abort(() => {
-            teardownChange();
-            teardownAbort();
-        }),
+    events(state, [
+        FormStatusState.change(
+            event => {
+                currentStatus = event.detail;
+                handle.update();
+            },
+            { signal: handle.signal },
+        ),
     ]);
 
     const accessor = (() => currentStatus) as FormStatusAccessor;

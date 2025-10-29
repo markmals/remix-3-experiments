@@ -55,12 +55,15 @@ export const useEffect: Effect = <P>(
         ) {
             if (pending === void 0) {
                 events(handle.signal, [
-                    dom.abort(() => {
-                        pending = false;
-                        if (reset !== void 0) {
-                            reset();
-                        }
-                    }),
+                    dom.abort(
+                        () => {
+                            pending = false;
+                            if (reset !== void 0) {
+                                reset();
+                            }
+                        },
+                        { once: true },
+                    ),
                 ]);
             }
             pending = true;
@@ -122,12 +125,15 @@ export const createEffectHandler =
             ) {
                 if (pending === void 0) {
                     events(handle.signal, [
-                        dom.abort(() => {
-                            pending = false;
-                            if (reset !== void 0) {
-                                reset();
-                            }
-                        }),
+                        dom.abort(
+                            () => {
+                                pending = false;
+                                if (reset !== void 0) {
+                                    reset();
+                                }
+                            },
+                            { once: true },
+                        ),
                     ]);
                 }
                 pending = true;
