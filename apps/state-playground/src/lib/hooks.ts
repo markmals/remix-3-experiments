@@ -231,7 +231,7 @@ class StoreImpl<Value, Action> extends EventTarget {
 export interface Store<out Value, in Action> {
     // private brand because only values from `createStore` are useable,
     // not arbitrary objects matching the shape.
-    [STORE]: never;
+    [STORE]: Value;
     update: (action: Action) => void;
 }
 

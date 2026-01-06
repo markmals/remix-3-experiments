@@ -49,41 +49,66 @@ function Button({
     );
 }
 
-class Counter extends Store<{ count: number; double: number }> {
+class CounterStore extends Store<{ count: number }> {
     constructor() {
-        super({ count: 1, double: 2 });
+        super({ count: 1 });
     }
 
     increment() {
-        const count = this.current.count + 1;
-        this.next({ count, double: count * 2 });
+        this.next({ count: this.current.count + 1 });
     }
 
     decrement() {
-        const count = this.current.count - 1;
-        this.next({ count, double: count * 2 });
+        this.next({ count: this.current.count - 1 });
     }
 }
 
-const Count = component(async function* () {
-    const counter = new Counter();
+function Count(this: Remix.Handle) {
+    const store = new CounterStore();
+    let counter = { count: 1, double: 2 };
 
-    for await (const { count, double } of counter) {
-        yield (
-            <Layout>
-                <span>
-                    Double {count} is {double}
-                </span>
-                <Button on={press(() => counter.increment())} outline>
-                    Increment
-                </Button>
-                <Button on={press(() => counter.decrement())} outline>
-                    Decrement
-                </Button>
-            </Layout>
-        );
-    }
-});
+    this.queueTask(async () => {
+        for await (const { count } of store) {
+            counter.count = count;
+            counter.double = count * 2;
+            this.update();
+        }
+    });
+
+    return () => (
+        <Layout>
+            <span>
+                Double {counter.count} is {counter.double}
+            </span>
+            <Button on={press(() => store.increment())} outline>
+                Increment
+            </Button>
+            <Button on={press(() => store.decrement())} outline>
+                Decrement
+            </Button>
+        </Layout>
+    );
+}
+
+// const Count = component(async function* () {
+//     const counter = new Counter();
+
+//     for await (const { count, double } of counter) {
+//         yield (
+// <Layout>
+//     <span>
+//         Double {count} is {double}
+//     </span>
+//     <Button on={press(() => counter.increment())} outline>
+//         Increment
+//     </Button>
+//     <Button on={press(() => counter.decrement())} outline>
+//         Decrement
+//     </Button>
+// </Layout>
+//         );
+//     }
+// });
 
 // Stateless component for loading states
 function LoadingMessage({ message }: { message: string }) {
